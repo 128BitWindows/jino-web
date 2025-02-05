@@ -1,0 +1,25 @@
+# .gitignore
+
+# Node.js dependencies
+node_modules/
+
+# Build output
+dist/
+
+# Editor/IDE settings
+.vscode/
+
+# Environment variables
+.env
+.env.local
+.env*.local
+
+# Logs
+*.log
+
+# OS files (macOS)
+.DS_Store
+
+# Optional: Ignore local build files
+*.js.map
+*.css.map

@@ -3,3 +3,42 @@
     transform: scale(1.02); /* Slight zoom on hover */
     transition: all 0.3s ease; /* Smooth transition */
 }
+  
+  #pizza-calculator .container {
+    max-width: 800px;
+    background: rgba(255, 255, 255, 0.95);
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  #pizza-calculator h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+  }
+  
+  #pizza-calculator label {
+    font-weight: bold;
+  }
+  
+  #pizza-calculator .emoji-icon {
+    font-size: 48px; /* Increase the size as needed */
+    transition: transform 0.3s;
+    display: inline-block;
+  }
+  
+  #pizza-calculator .animate-icon:hover {
+    transform: scale(1.2) rotate(5deg);
+  }
+  
+  #pizza-calculator #result {
+    font-size: 1.25rem;
+    text-align: center;
+    margin-top: 1rem;
+  }
+  
+  #pizza-calculator {
+    color: #333;
+    padding: 2rem 0;
+  }  

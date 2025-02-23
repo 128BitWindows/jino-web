@@ -1,32 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8"/>
-	<title>Pizza Calculator</title>
-	<!-- Bootstrap 5 CSS -->
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" integrity="sha384-..." crossorigin="anonymous"/>
-	<!-- Custom CSS -->
-	<link rel="stylesheet" href="./styles.css"/>
+  <meta charset="UTF-8" />
+  <title>Fun Pizza Calculator</title>
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" 
+        integrity="sha384-..." crossorigin="anonymous" />
+  <!-- Custom CSS -->
+  <style>
+    /* Fun, colorful background and playful fonts */
+    body {
+      color: #333;
+      min-height: 100vh;
+      margin: 0;
+      padding: 2rem 0;
+    }
+    .container {
+      max-width: 800px;
+      background: rgba(255,255,255,0.95);
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+    }
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+    label {
+      font-weight: bold;
+    }
+    /* Style for the emoji icons */
+    .emoji-icon {
+      font-size: 48px; /* Increase the size as needed */
+      transition: transform 0.3s;
+      display: inline-block;
+    }
+    /* Hover animation for icons */
+    .animate-icon:hover {
+      transform: scale(1.2) rotate(5deg);
+    }
+    #result {
+      font-size: 1.25rem;
+      text-align: center;
+      margin-top: 1rem;
+    }
+  </style>
 </head>
 <body>
-	<div class="container mt-5">
-		<h1 class="mb-4 text-center">Pizza Calculator</h1>
-		<form id="pizzaForm" class="mb-3">
-			<div class="mb-3">
-				<label for="numGuests" class="form-label">Number of Guests</label>
-				<input type="number" class="form-control" id="numGuests" placeholder="Enter number of guests"/>
-			</div>
-			<div class="mb-3">
-				<label for="slicesPerPerson" class="form-label">Slices Per Person</label>
-				<input type="number" class="form-control" id="slicesPerPerson" placeholder="Enter slices per person"/>
-			</div>
-			<div class="mb-3">
-				<label for="slicesPerPizza" class="form-label">Slices Per Pizza</label>
-				<input type="number" class="form-control" id="slicesPerPizza" placeholder="Enter slices in one whole pizza"/>
-			</div>
-		</form>
-		<div id="result" class="alert alert-info d-none"></div>
-	</div>
-	<script src="./dist/pizzaApp.js"></script>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container">
+        <a class="navbar-brand" href="index.html">My Portfolio</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#about">About</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#portfolio">Portfolio</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#contact">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+  </nav>
+  
+  <div class="container mt-5">
+    <h1 class="text-center mb-4">Pizza Sizing Tool</h1>
+    <form id="pizzaForm" class="mb-4">
+      <!-- Number of Guests Slider -->
+      <div class="mb-3">
+        <label for="numGuests" class="form-label">
+          Number of Guests: <span id="numGuestsValue">1</span>
+        </label>
+        <input type="range" class="form-range" id="numGuests" min="1" max="50" value="1" />
+      </div>
+      <!-- Slices Per Person Slider -->
+      <div class="mb-3">
+        <label for="slicesPerPerson" class="form-label">
+          Slices Per Person: <span id="slicesPerPersonValue">1</span>
+        </label>
+        <input type="range" class="form-range" id="slicesPerPerson" min="1" max="10" value="1" />
+      </div>
+      <!-- Slices Per Pizza Slider -->
+      <div class="mb-3">
+        <label for="slicesPerPizza" class="form-label">
+          Slices Per Pizza: <span id="slicesPerPizzaValue">8</span>
+        </label>
+        <input type="range" class="form-range" id="slicesPerPizza" min="1" max="12" value="8" />
+      </div>
+    </form>
+
+    <!-- Dynamic Icon Displays -->
+    <div class="row mb-4">
+      <div class="col text-center">
+        <h3>Guests</h3>
+        <div id="guestsContainer"></div>
+      </div>
+      <div class="col text-center">
+        <h3>Pizzas</h3>
+        <div id="pizzasContainer"></div>
+      </div>
+    </div>
+
+    <!-- Calculation Result -->
+    <div id="result" class="alert alert-info d-none"></div>
+  </div>
+  <!-- Load the compiled JavaScript -->
+  <script src="./dist/pizzaApp.js"></script>
 </body>
 </html>

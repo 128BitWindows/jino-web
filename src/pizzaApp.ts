@@ -12,8 +12,8 @@ const slicesPerPersonValueSpan = document.getElementById("slicesPerPersonValue")
 const slicesPerPizzaValueSpan = document.getElementById("slicesPerPizzaValue") as HTMLSpanElement;
 
 // Unicode emoji constants
-const PIZZA_EMOJI = "🍕";
-const GUEST_EMOJI = "👤";
+const PIZZA_EMOJI = "\u{1F355}";
+const GUEST_EMOJI = "\u{1F464}";
 
 // Calculate and update the UI
 function calculatePizzas(): void {

@@ -1,4 +1,4 @@
-function getRequiredElement<T extends HTMLElement>(id: string): T {
+function getRequiredElementById<T extends HTMLElement>(id: string): T {
 	const element = document.getElementById(id);
 	if (!element) {
 		throw new Error(`Missing element: #${id}`);
@@ -6,16 +6,16 @@ function getRequiredElement<T extends HTMLElement>(id: string): T {
 	return element as T;
 }
 
-const numGuestsInput = getRequiredElement<HTMLInputElement>("numGuests");
-const slicesPerPersonInput = getRequiredElement<HTMLInputElement>("slicesPerPerson");
-const slicesPerPizzaInput = getRequiredElement<HTMLInputElement>("slicesPerPizza");
-const resultDiv = getRequiredElement<HTMLDivElement>("result");
-const guestsContainer = getRequiredElement<HTMLDivElement>("guestsContainer");
-const pizzasContainer = getRequiredElement<HTMLDivElement>("pizzasContainer");
+const numGuestsInput = getRequiredElementById<HTMLInputElement>("numGuests");
+const slicesPerPersonInput = getRequiredElementById<HTMLInputElement>("slicesPerPerson");
+const slicesPerPizzaInput = getRequiredElementById<HTMLInputElement>("slicesPerPizza");
+const resultDiv = getRequiredElementById<HTMLDivElement>("result");
+const guestsContainer = getRequiredElementById<HTMLDivElement>("guestsContainer");
+const pizzasContainer = getRequiredElementById<HTMLDivElement>("pizzasContainer");
 
-const numGuestsValueSpan = getRequiredElement<HTMLSpanElement>("numGuestsValue");
-const slicesPerPersonValueSpan = getRequiredElement<HTMLSpanElement>("slicesPerPersonValue");
-const slicesPerPizzaValueSpan = getRequiredElement<HTMLSpanElement>("slicesPerPizzaValue");
+const numGuestsValueSpan = getRequiredElementById<HTMLSpanElement>("numGuestsValue");
+const slicesPerPersonValueSpan = getRequiredElementById<HTMLSpanElement>("slicesPerPersonValue");
+const slicesPerPizzaValueSpan = getRequiredElementById<HTMLSpanElement>("slicesPerPizzaValue");
 
 // Unicode emoji constants
 const PIZZA_EMOJI = "\u{1F355}";

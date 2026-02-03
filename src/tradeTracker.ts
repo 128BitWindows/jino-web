@@ -101,7 +101,7 @@ const filterButtons = Array.from(document.querySelectorAll<HTMLButtonElement>(".
 
 let activeFilter: "all" | "goal" | "green" | "neutral" | "red" = "all";
 
-function getRequiredElement<T extends HTMLElement>(id: string): T {
+function getRequiredElement<T extends Element>(id: string): T {
 	const element = document.getElementById(id);
 	if (!element) {
 		throw new Error(`Missing element: #${id}`);

@@ -1,33 +1,50 @@
-// Get DOM elements
-const numGuestsInput = document.getElementById("numGuests") as HTMLInputElement;
-const slicesPerPersonInput = document.getElementById("slicesPerPerson") as HTMLInputElement;
-const slicesPerPizzaInput = document.getElementById("slicesPerPizza") as HTMLInputElement;
-const resultDiv = document.getElementById("result") as HTMLDivElement;
-const guestsContainer = document.getElementById("guestsContainer") as HTMLDivElement;
-const pizzasContainer = document.getElementById("pizzasContainer") as HTMLDivElement;
+function getRequiredElement<T extends HTMLElement>(id: string): T {
+	const element = document.getElementById(id);
+	if (!element) {
+		throw new Error(`Missing element: #${id}`);
+	}
+	return element as T;
+}
 
-// Get the span elements that show the current slider value
-const numGuestsValueSpan = document.getElementById("numGuestsValue") as HTMLSpanElement;
-const slicesPerPersonValueSpan = document.getElementById("slicesPerPersonValue") as HTMLSpanElement;
-const slicesPerPizzaValueSpan = document.getElementById("slicesPerPizzaValue") as HTMLSpanElement;
+const numGuestsInput = getRequiredElement<HTMLInputElement>("numGuests");
+const slicesPerPersonInput = getRequiredElement<HTMLInputElement>("slicesPerPerson");
+const slicesPerPizzaInput = getRequiredElement<HTMLInputElement>("slicesPerPizza");
+const resultDiv = getRequiredElement<HTMLDivElement>("result");
+const guestsContainer = getRequiredElement<HTMLDivElement>("guestsContainer");
+const pizzasContainer = getRequiredElement<HTMLDivElement>("pizzasContainer");
+
+const numGuestsValueSpan = getRequiredElement<HTMLSpanElement>("numGuestsValue");
+const slicesPerPersonValueSpan = getRequiredElement<HTMLSpanElement>("slicesPerPersonValue");
+const slicesPerPizzaValueSpan = getRequiredElement<HTMLSpanElement>("slicesPerPizzaValue");
 
 // Unicode emoji constants
 const PIZZA_EMOJI = "\u{1F355}";
 const GUEST_EMOJI = "\u{1F464}";
 
-// Calculate and update the UI
+function renderIcons(container: HTMLElement, emoji: string, count: number): void {
+	const fragment = document.createDocumentFragment();
+	for (let i = 0; i < count; i++) {
+		const span = document.createElement("span");
+		span.textContent = emoji;
+		span.classList.add("emoji-icon", "mx-1", "animate-icon");
+		fragment.appendChild(span);
+	}
+	container.replaceChildren(fragment);
+}
+
+function updateValueDisplay(input: HTMLInputElement, output: HTMLSpanElement): void {
+	output.textContent = String(input.valueAsNumber);
+}
+
 function calculatePizzas(): void {
-	// Parse the current slider values
-	const numGuests = parseInt(numGuestsInput.value) || 0;
-	const slicesPerPerson = parseInt(slicesPerPersonInput.value) || 0;
-	const slicesPerPizza = parseInt(slicesPerPizzaInput.value) || 0;
+	const numGuests = numGuestsInput.valueAsNumber;
+	const slicesPerPerson = slicesPerPersonInput.valueAsNumber;
+	const slicesPerPizza = slicesPerPizzaInput.valueAsNumber;
 
-	// Update the display spans next to each slider
-	numGuestsValueSpan.textContent = numGuestsInput.value;
-	slicesPerPersonValueSpan.textContent = slicesPerPersonInput.value;
-	slicesPerPizzaValueSpan.textContent = slicesPerPizzaInput.value;
+	updateValueDisplay(numGuestsInput, numGuestsValueSpan);
+	updateValueDisplay(slicesPerPersonInput, slicesPerPersonValueSpan);
+	updateValueDisplay(slicesPerPizzaInput, slicesPerPizzaValueSpan);
 
-	// Only calculate if all values are > 0
 	if (numGuests > 0 && slicesPerPerson > 0 && slicesPerPizza > 0) {
 		const totalSlicesNeeded = numGuests * slicesPerPerson;
 		const pizzasNeeded = Math.ceil(totalSlicesNeeded / slicesPerPizza);
@@ -35,30 +52,15 @@ function calculatePizzas(): void {
 		resultDiv.textContent = `For ${numGuests} guest(s) you'll need ${pizzasNeeded} pizza(s)!`;
 		resultDiv.classList.remove("d-none");
 
-		// Update guest icons: one emoji per guest
-		guestsContainer.innerHTML = "";
-		for (let i = 0; i < numGuests; i++) {
-			const span = document.createElement("span");
-			span.textContent = GUEST_EMOJI;
-			span.classList.add("emoji-icon", "mx-1", "animate-icon");
-			guestsContainer.appendChild(span);
-		}
-
-		// Update pizza icons: one emoji per pizza needed
-		pizzasContainer.innerHTML = "";
-		for (let i = 0; i < pizzasNeeded; i++) {
-			const span = document.createElement("span");
-			span.textContent = PIZZA_EMOJI;
-			span.classList.add("emoji-icon", "mx-1", "animate-icon");
-			pizzasContainer.appendChild(span);
-		}
-	} else {
-		// If any field is invalid, show an error and clear icons
-		resultDiv.textContent = "Please provide valid numbers in all fields.";
-		resultDiv.classList.remove("d-none");
-		guestsContainer.innerHTML = "";
-		pizzasContainer.innerHTML = "";
+		renderIcons(guestsContainer, GUEST_EMOJI, numGuests);
+		renderIcons(pizzasContainer, PIZZA_EMOJI, pizzasNeeded);
+		return;
 	}
+
+	resultDiv.textContent = "Please provide valid numbers in all fields.";
+	resultDiv.classList.remove("d-none");
+	guestsContainer.replaceChildren();
+	pizzasContainer.replaceChildren();
 }
 
 // Attach input event listeners so that every slider change triggers a recalculation

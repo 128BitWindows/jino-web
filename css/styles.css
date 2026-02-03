@@ -66,3 +66,167 @@ footer {
   text-align: center;
   margin-top: 1rem;
 }
+
+/* Styles specific to trade-tracker.html */
+#trade-tracker {
+  background: radial-gradient(circle at top, #f7f7f7 0%, #ffffff 55%, #f3f3f3 100%);
+}
+
+#trade-tracker .tracker-hero {
+  padding: 1.5rem 1rem;
+  border-radius: 20px;
+  background: linear-gradient(135deg, #fff8e7, #eef6ff);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+#trade-tracker .panel {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 1.5rem;
+  box-shadow: 0 12px 28px rgba(15, 30, 50, 0.08);
+}
+
+#trade-tracker .panel-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+#trade-tracker .summary-card {
+  background: #111827;
+  color: #f9fafb;
+  padding: 1.25rem;
+  border-radius: 16px;
+  min-height: 110px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+#trade-tracker .summary-label {
+  font-size: 0.85rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 0.35rem;
+  opacity: 0.7;
+}
+
+#trade-tracker .summary-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+#trade-tracker .target-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+#trade-tracker .target-label {
+  margin-bottom: 0.35rem;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+#trade-tracker .target-value {
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 0;
+}
+
+#trade-tracker .v-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+#trade-tracker .day-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 1rem;
+  background: #fafafa;
+}
+
+#trade-tracker .day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+#trade-tracker .status-badge {
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+#trade-tracker .status-goal {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+#trade-tracker .status-green {
+  background: #ecfdf5;
+  color: #047857;
+}
+
+#trade-tracker .status-neutral {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+#trade-tracker .status-red {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+#trade-tracker .status-pending {
+  background: #e5e7eb;
+  color: #374151;
+}
+
+#trade-tracker .withdrawal-amount {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+#trade-tracker .chart-wrapper {
+  background: #0f172a;
+  border-radius: 16px;
+  padding: 1rem;
+}
+
+#trade-tracker .chart-path {
+  fill: none;
+  stroke-width: 3;
+}
+
+#trade-tracker .chart-path.target {
+  stroke: #f59e0b;
+}
+
+#trade-tracker .chart-path.actual {
+  stroke: #38bdf8;
+}
+
+#trade-tracker .metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+#trade-tracker .metric:last-child {
+  border-bottom: none;
+}
+
+#trade-tracker .filter-button.active {
+  background: #111827;
+  color: #f9fafb;
+  border-color: #111827;
+}

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<title>Trade Tracker</title>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+	<link rel="stylesheet" href="css/styles.css">
+</head>
+<body id="trade-tracker">
+	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+		<div class="container">
+			<a class="navbar-brand" href="index.html">Back to Home Page</a>
+		</div>
+	</nav>
+
+	<main class="container my-5">
+		<section class="tracker-hero text-center mb-5">
+			<h1 class="display-5">Trade Tracker</h1>
+			<p class="lead">Set compounding goals, log each trading day, and stay accountable.</p>
+		</section>
+
+		<section class="row g-4 mb-5">
+			<div class="col-md-3">
+				<div class="summary-card">
+					<p class="summary-label">Current Equity</p>
+					<p class="summary-value" id="summaryEquity">$0.00</p>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="summary-card">
+					<p class="summary-label">Today's Target End</p>
+					<p class="summary-value" id="summaryTargetEnd">$0.00</p>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="summary-card">
+					<p class="summary-label">Daily Target %</p>
+					<p class="summary-value" id="summaryTargetPct">0%</p>
+				</div>
+			</div>
+			<div class="col-md-3">
+				<div class="summary-card">
+					<p class="summary-label">Max Drawdown</p>
+					<p class="summary-value" id="summaryDrawdown">0%</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="row g-4 mb-5">
+			<div class="col-lg-6">
+				<div class="panel">
+					<h2 class="panel-title">Setup</h2>
+					<form id="setupForm" class="row g-3">
+						<div class="col-md-6">
+							<label class="form-label" for="startingCapital">Starting Capital</label>
+							<input class="form-control" id="startingCapital" type="number" min="0" step="0.01" placeholder="10000" required />
+						</div>
+						<div class="col-md-6">
+							<label class="form-label" for="dailyTargetPct">Daily Target %</label>
+							<input class="form-control" id="dailyTargetPct" type="number" min="0" step="0.01" placeholder="1" required />
+						</div>
+						<div class="col-md-6">
+							<label class="form-label" for="startDate">Start Date (Day 1)</label>
+							<input class="form-control" id="startDate" type="date" required />
+						</div>
+						<div class="col-md-6">
+							<label class="form-label" for="targetGoal">Target Goal</label>
+							<input class="form-control" id="targetGoal" type="number" min="0" step="0.01" placeholder="25000" required />
+						</div>
+						<div class="col-12 d-flex flex-wrap gap-2">
+							<button type="submit" class="btn btn-primary">Save Settings</button>
+							<button type="button" id="resetAll" class="btn btn-outline-danger">Reset All</button>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="col-lg-6">
+				<div class="panel">
+					<h2 class="panel-title">Today's Target</h2>
+					<div class="target-grid">
+						<div>
+							<p class="target-label">Trading Day</p>
+							<p class="target-value" id="targetDay">Day 0</p>
+						</div>
+						<div>
+							<p class="target-label">Target Start</p>
+							<p class="target-value" id="targetStart">$0.00</p>
+						</div>
+						<div>
+							<p class="target-label">Target End</p>
+							<p class="target-value" id="targetEnd">$0.00</p>
+						</div>
+						<div>
+							<p class="target-label">Target Gain</p>
+							<p class="target-value" id="targetGain">$0.00</p>
+						</div>
+					</div>
+					<button type="button" id="addDay" class="btn btn-outline-primary mt-3">Add Trading Day</button>
+					<p class="small text-muted mt-2">Trading days are manual so you only log market-open days.</p>
+				</div>
+			</div>
+		</section>
+
+		<section class="row g-4 mb-5">
+			<div class="col-lg-7">
+				<div class="panel">
+					<h2 class="panel-title">Daily Log</h2>
+					<div id="daysContainer" class="v-stack"></div>
+				</div>
+			</div>
+			<div class="col-lg-5">
+				<div class="panel mb-4">
+					<h2 class="panel-title">Deposits & Withdrawals</h2>
+					<form id="cashflowForm" class="row g-3">
+						<div class="col-6">
+							<label class="form-label" for="cashflowDate">Date</label>
+							<input class="form-control" id="cashflowDate" type="date" required />
+						</div>
+						<div class="col-6">
+							<label class="form-label" for="cashflowType">Type</label>
+							<select class="form-select" id="cashflowType">
+								<option value="deposit">Deposit</option>
+								<option value="withdrawal">Withdrawal</option>
+							</select>
+						</div>
+						<div class="col-12">
+							<label class="form-label" for="cashflowAmount">Amount</label>
+							<input class="form-control" id="cashflowAmount" type="number" min="0" step="0.01" required />
+						</div>
+						<div class="col-12">
+							<label class="form-label" for="cashflowNote">Note (optional)</label>
+							<input class="form-control" id="cashflowNote" type="text" maxlength="80" />
+						</div>
+						<div class="col-12">
+							<button type="submit" class="btn btn-primary">Add Cashflow</button>
+						</div>
+					</form>
+					<div id="cashflowList" class="v-stack mt-3"></div>
+				</div>
+
+				<div class="panel">
+					<h2 class="panel-title">Withdrawal Guidance</h2>
+					<div class="row g-3">
+						<div class="col-6">
+							<label class="form-label" for="withdrawRule">Rule</label>
+							<select class="form-select" id="withdrawRule">
+								<option value="profit_start">Profit Above Start</option>
+								<option value="profit_hwm">Profit Above High Water Mark</option>
+								<option value="goal_only">Only After Goal</option>
+							</select>
+						</div>
+						<div class="col-6">
+							<label class="form-label" for="withdrawRate">Withdraw Rate %</label>
+							<input class="form-control" id="withdrawRate" type="number" min="0" max="100" step="1" />
+						</div>
+						<div class="col-12">
+							<label class="form-label" for="withdrawBuffer">Buffer Amount</label>
+							<input class="form-control" id="withdrawBuffer" type="number" min="0" step="0.01" />
+						</div>
+						<div class="col-12">
+							<p class="small text-muted mb-2">Suggested cadence: weekly (edit as needed).</p>
+							<p class="withdrawal-amount" id="withdrawalSuggestion">$0.00</p>
+							<p class="small text-muted" id="withdrawalNote"></p>
+						</div>
+						<div class="col-12">
+							<button type="button" id="saveWithdrawSettings" class="btn btn-outline-primary">Save Withdrawal Settings</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="row g-4 mb-5">
+			<div class="col-lg-8">
+				<div class="panel">
+					<h2 class="panel-title">Progress</h2>
+					<div class="chart-wrapper">
+						<svg id="equityChart" viewBox="0 0 600 240" role="img" aria-label="Equity and target chart">
+							<path id="targetPath" class="chart-path target" d=""></path>
+							<path id="actualPath" class="chart-path actual" d=""></path>
+						</svg>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<div class="panel">
+					<h2 class="panel-title">Accountability</h2>
+					<div class="metric">
+						<span>Win Rate</span>
+						<strong id="metricWinRate">0%</strong>
+					</div>
+					<div class="metric">
+						<span>Avg Green Day</span>
+						<strong id="metricAvgGreen">0%</strong>
+					</div>
+					<div class="metric">
+						<span>Avg Red Day</span>
+						<strong id="metricAvgRed">0%</strong>
+					</div>
+					<div class="metric">
+						<span>Profit Factor</span>
+						<strong id="metricProfitFactor">0</strong>
+					</div>
+					<div class="metric">
+						<span>Goal-Hit Streak</span>
+						<strong id="metricGoalStreak">0</strong>
+					</div>
+					<div class="metric">
+						<span>Green Streak</span>
+						<strong id="metricGreenStreak">0</strong>
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section class="panel mb-5">
+			<h2 class="panel-title">History</h2>
+			<div class="d-flex flex-wrap gap-2 mb-3">
+				<button type="button" class="btn btn-outline-secondary filter-button active" data-filter="all">All</button>
+				<button type="button" class="btn btn-outline-secondary filter-button" data-filter="goal">Met Goal</button>
+				<button type="button" class="btn btn-outline-secondary filter-button" data-filter="green">Green</button>
+				<button type="button" class="btn btn-outline-secondary filter-button" data-filter="neutral">Neutral</button>
+				<button type="button" class="btn btn-outline-secondary filter-button" data-filter="red">Red</button>
+			</div>
+			<div class="table-responsive">
+				<table class="table table-striped align-middle">
+					<thead>
+						<tr>
+							<th>Date</th>
+							<th>Day</th>
+							<th>Target Start</th>
+							<th>Target End</th>
+							<th>Actual Close</th>
+							<th>Trading %</th>
+							<th>Status</th>
+						</tr>
+					</thead>
+					<tbody id="historyBody"></tbody>
+				</table>
+			</div>
+		</section>
+
+		<section class="panel">
+			<h2 class="panel-title">Backup</h2>
+			<div class="d-flex flex-wrap gap-2">
+				<button type="button" id="exportData" class="btn btn-outline-primary">Export JSON</button>
+				<label class="btn btn-outline-primary mb-0">
+					Import JSON
+					<input id="importData" type="file" accept="application/json" class="d-none" />
+				</label>
+			</div>
+			<p class="small text-muted mt-2">Data is saved locally in your browser.</p>
+		</section>
+	</main>
+
+	<script src="./tradeTracker.js" defer></script>
+</body>
+</html>

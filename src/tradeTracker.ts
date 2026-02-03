@@ -106,7 +106,7 @@ function getRequiredElement<T extends Element>(id: string): T {
 	if (!element) {
 		throw new Error(`Missing element: #${id}`);
 	}
-	return element as T;
+	return element as unknown as T;
 }
 
 function defaultWithdrawalSettings(): WithdrawalSettings {

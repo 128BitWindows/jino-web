@@ -117,6 +117,38 @@ footer {
   margin: 0;
 }
 
+#trade-tracker .settings-button {
+  border-radius: 999px;
+  padding: 0.4rem 1rem;
+}
+
+#trade-tracker .settings-dialog {
+  border: none;
+  padding: 0;
+  width: min(720px, 92vw);
+  border-radius: 18px;
+  box-shadow: 0 25px 50px rgba(15, 30, 50, 0.2);
+}
+
+#trade-tracker .settings-dialog::backdrop {
+  background: rgba(15, 23, 42, 0.45);
+}
+
+#trade-tracker .settings-panel {
+  margin: 0;
+}
+
+#trade-tracker .current-day-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 1rem;
+  background: #fafafa;
+}
+
+#trade-tracker .current-day-card .form-label {
+  font-size: 0.9rem;
+}
+
 #trade-tracker .target-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -188,31 +220,6 @@ footer {
   color: #374151;
 }
 
-#trade-tracker .withdrawal-amount {
-  font-size: 1.6rem;
-  font-weight: 700;
-  margin-bottom: 0.25rem;
-}
-
-#trade-tracker .chart-wrapper {
-  background: #0f172a;
-  border-radius: 16px;
-  padding: 1rem;
-}
-
-#trade-tracker .chart-path {
-  fill: none;
-  stroke-width: 3;
-}
-
-#trade-tracker .chart-path.target {
-  stroke: #f59e0b;
-}
-
-#trade-tracker .chart-path.actual {
-  stroke: #38bdf8;
-}
-
 #trade-tracker .metric {
   display: flex;
   justify-content: space-between;
@@ -229,4 +236,25 @@ footer {
   background: #111827;
   color: #f9fafb;
   border-color: #111827;
+}
+
+#trade-tracker .cashflow-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  background: #e2e8f0;
+  color: #1f2937;
+}
+
+#trade-tracker .cashflow-pill.deposit {
+  background: #dcfce7;
+  color: #14532d;
+}
+
+#trade-tracker .cashflow-pill.withdrawal {
+  background: #fee2e2;
+  color: #7f1d1d;
 }

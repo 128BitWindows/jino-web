@@ -1,5 +1,3 @@
-type WithdrawalRule = "profit_start" | "profit_hwm" | "goal_only";
-
 interface Settings {
 	startingCapital: number;
 	dailyTargetPct: number;
@@ -22,17 +20,10 @@ interface Cashflow {
 	note?: string;
 }
 
-interface WithdrawalSettings {
-	rule: WithdrawalRule;
-	rate: number;
-	buffer: number;
-}
-
 interface TrackerData {
 	settings: Settings | null;
 	days: DayEntry[];
 	cashflows: Cashflow[];
-	withdrawal: WithdrawalSettings;
 }
 
 interface DayMetrics {
@@ -57,6 +48,9 @@ const startDateInput = getRequiredElement<HTMLInputElement>("startDate");
 const targetGoalInput = getRequiredElement<HTMLInputElement>("targetGoal");
 const resetAllButton = getRequiredElement<HTMLButtonElement>("resetAll");
 const addDayButton = getRequiredElement<HTMLButtonElement>("addDay");
+const openSettingsButton = getRequiredElement<HTMLButtonElement>("openSettings");
+const closeSettingsButton = getRequiredElement<HTMLButtonElement>("closeSettings");
+const settingsDialog = getRequiredElement<HTMLDialogElement>("settingsDialog");
 
 const summaryEquity = getRequiredElement<HTMLParagraphElement>("summaryEquity");
 const summaryTargetEnd = getRequiredElement<HTMLParagraphElement>("summaryTargetEnd");
@@ -68,10 +62,8 @@ const targetStart = getRequiredElement<HTMLParagraphElement>("targetStart");
 const targetEnd = getRequiredElement<HTMLParagraphElement>("targetEnd");
 const targetGain = getRequiredElement<HTMLParagraphElement>("targetGain");
 
-const daysContainer = getRequiredElement<HTMLDivElement>("daysContainer");
+const currentDayCard = getRequiredElement<HTMLDivElement>("currentDayCard");
 const historyBody = getRequiredElement<HTMLTableSectionElement>("historyBody");
-const chartTargetPath = getRequiredElement<SVGPathElement>("targetPath");
-const chartActualPath = getRequiredElement<SVGPathElement>("actualPath");
 
 const metricWinRate = getRequiredElement<HTMLSpanElement>("metricWinRate");
 const metricAvgGreen = getRequiredElement<HTMLSpanElement>("metricAvgGreen");
@@ -79,20 +71,6 @@ const metricAvgRed = getRequiredElement<HTMLSpanElement>("metricAvgRed");
 const metricProfitFactor = getRequiredElement<HTMLSpanElement>("metricProfitFactor");
 const metricGoalStreak = getRequiredElement<HTMLSpanElement>("metricGoalStreak");
 const metricGreenStreak = getRequiredElement<HTMLSpanElement>("metricGreenStreak");
-
-const cashflowForm = getRequiredElement<HTMLFormElement>("cashflowForm");
-const cashflowDateInput = getRequiredElement<HTMLInputElement>("cashflowDate");
-const cashflowTypeInput = getRequiredElement<HTMLSelectElement>("cashflowType");
-const cashflowAmountInput = getRequiredElement<HTMLInputElement>("cashflowAmount");
-const cashflowNoteInput = getRequiredElement<HTMLInputElement>("cashflowNote");
-const cashflowList = getRequiredElement<HTMLDivElement>("cashflowList");
-
-const withdrawRuleInput = getRequiredElement<HTMLSelectElement>("withdrawRule");
-const withdrawRateInput = getRequiredElement<HTMLInputElement>("withdrawRate");
-const withdrawBufferInput = getRequiredElement<HTMLInputElement>("withdrawBuffer");
-const withdrawSuggestion = getRequiredElement<HTMLParagraphElement>("withdrawalSuggestion");
-const withdrawNote = getRequiredElement<HTMLParagraphElement>("withdrawalNote");
-const saveWithdrawSettings = getRequiredElement<HTMLButtonElement>("saveWithdrawSettings");
 
 const exportButton = getRequiredElement<HTMLButtonElement>("exportData");
 const importInput = getRequiredElement<HTMLInputElement>("importData");
@@ -109,14 +87,6 @@ function getRequiredElement<T extends Element>(id: string): T {
 	return element as unknown as T;
 }
 
-function defaultWithdrawalSettings(): WithdrawalSettings {
-	return {
-		rule: "profit_hwm",
-		rate: 50,
-		buffer: 0,
-	};
-}
-
 function loadData(): TrackerData {
 	const raw = localStorage.getItem(STORAGE_KEY);
 	if (!raw) {
@@ -124,7 +94,6 @@ function loadData(): TrackerData {
 			settings: null,
 			days: [],
 			cashflows: [],
-			withdrawal: defaultWithdrawalSettings(),
 		};
 	}
 
@@ -134,14 +103,12 @@ function loadData(): TrackerData {
 			settings: parsed.settings ?? null,
 			days: parsed.days ?? [],
 			cashflows: parsed.cashflows ?? [],
-			withdrawal: parsed.withdrawal ?? defaultWithdrawalSettings(),
 		};
 	} catch {
 		return {
 			settings: null,
 			days: [],
 			cashflows: [],
-			withdrawal: defaultWithdrawalSettings(),
 		};
 	}
 }
@@ -324,81 +291,148 @@ function renderTargetPanel(data: TrackerData, metrics: DayMetrics[]): void {
 }
 
 function renderDays(data: TrackerData, metrics: DayMetrics[]): void {
-	daysContainer.innerHTML = "";
-	metrics.forEach((metric) => {
-		const card = document.createElement("div");
-		card.className = "day-card";
-
-		const header = document.createElement("div");
-		header.className = "day-header";
-
-		const heading = document.createElement("div");
-		heading.innerHTML = `<strong>Day ${metric.dayIndex}</strong> <span class="text-muted">(${metric.entry.date || "No date"})</span>`;
-
-		const statusBadge = document.createElement("span");
-		statusBadge.className = `status-badge ${getStatusClass(metric.status)}`;
-		statusBadge.textContent = getStatusLabel(metric.status, metric.entry);
-
-		header.appendChild(heading);
-		header.appendChild(statusBadge);
-
-		const body = document.createElement("div");
-		body.className = "row g-3 mt-2";
-
-		body.appendChild(buildInputGroup("Date", buildDateInput(metric.entry)));
-		body.appendChild(buildInputGroup("Actual Close", buildActualInput(metric.entry, metric.netCashflow, metric.targetStart, metric.entry.noTrade)));
-		body.appendChild(buildToggleGroup("No Trade Today", buildNoTradeToggle(metric.entry)));
-
-		const stats = document.createElement("div");
-		stats.className = "col-12";
-		stats.innerHTML = `
-			<div class="row g-3">
-				<div class="col-sm-4">
-					<div class="small text-muted">Target Start</div>
-					<div><strong>${formatCurrency(metric.targetStart)}</strong></div>
-				</div>
-				<div class="col-sm-4">
-					<div class="small text-muted">Target End</div>
-					<div><strong>${formatCurrency(metric.targetEnd)}</strong></div>
-				</div>
-				<div class="col-sm-4">
-					<div class="small text-muted">Target Gain</div>
-					<div><strong>${formatCurrency(metric.targetGain)}</strong></div>
-				</div>
-				<div class="col-sm-4">
-					<div class="small text-muted">Net Cashflow</div>
-					<div><strong>${formatCurrency(metric.netCashflow)}</strong></div>
-				</div>
-				<div class="col-sm-4">
-					<div class="small text-muted">Trading Change</div>
-					<div><strong>${metric.tradingChange !== null ? formatCurrency(metric.tradingChange) : "--"}</strong></div>
-				</div>
-				<div class="col-sm-4">
-					<div class="small text-muted">Trading %</div>
-					<div><strong>${metric.tradingPct !== null ? formatPercent(metric.tradingPct) : "--"}</strong></div>
-				</div>
-			</div>
+	currentDayCard.innerHTML = "";
+	const currentMetric = metrics[metrics.length - 1];
+	if (!currentMetric) {
+		currentDayCard.innerHTML = `
+			<p class="text-muted mb-3">No trading days logged yet.</p>
+			<button type="button" class="btn btn-outline-primary" id="addDayInline">Add Trading Day</button>
 		`;
+		const inlineButton = currentDayCard.querySelector<HTMLButtonElement>("#addDayInline");
+		inlineButton?.addEventListener("click", () => addDayButton.click());
+		return;
+	}
 
-		const footer = document.createElement("div");
-		footer.className = "d-flex justify-content-end mt-3";
-		const deleteButton = document.createElement("button");
-		deleteButton.type = "button";
-		deleteButton.className = "btn btn-outline-danger btn-sm";
-		deleteButton.textContent = "Remove Day";
-		deleteButton.addEventListener("click", () => {
-			data.days = data.days.filter((day) => day.id !== metric.entry.id);
-			saveData(data);
-			renderAll(data);
-		});
-		footer.appendChild(deleteButton);
+	const header = document.createElement("div");
+	header.className = "day-header mb-3";
+	header.innerHTML = `<div><strong>Day ${currentMetric.dayIndex}</strong> <span class="text-muted">(${currentMetric.entry.date || "No date"})</span></div>`;
 
-		card.appendChild(header);
-		card.appendChild(body);
-		card.appendChild(stats);
-		card.appendChild(footer);
-		daysContainer.appendChild(card);
+	const statusBadge = document.createElement("span");
+	statusBadge.className = `status-badge ${getStatusClass(currentMetric.status)}`;
+	statusBadge.textContent = getStatusLabel(currentMetric.status, currentMetric.entry);
+	header.appendChild(statusBadge);
+
+	const body = document.createElement("div");
+	body.className = "row g-3";
+	body.appendChild(buildInputGroup("Date", buildDateInput(currentMetric.entry)));
+	body.appendChild(buildInputGroup("Actual Close", buildActualInput(currentMetric.entry, currentMetric.netCashflow, currentMetric.targetStart, currentMetric.entry.noTrade)));
+	body.appendChild(buildToggleGroup("No Trade Today", buildNoTradeToggle(currentMetric.entry)));
+
+	const stats = document.createElement("div");
+	stats.className = "col-12";
+	stats.innerHTML = `
+		<div class="row g-3">
+			<div class="col-sm-4">
+				<div class="small text-muted">Target Start</div>
+				<div><strong>${formatCurrency(currentMetric.targetStart)}</strong></div>
+			</div>
+			<div class="col-sm-4">
+				<div class="small text-muted">Target End</div>
+				<div><strong>${formatCurrency(currentMetric.targetEnd)}</strong></div>
+			</div>
+			<div class="col-sm-4">
+				<div class="small text-muted">Target Gain</div>
+				<div><strong>${formatCurrency(currentMetric.targetGain)}</strong></div>
+			</div>
+			<div class="col-sm-4">
+				<div class="small text-muted">Net Cashflow</div>
+				<div><strong>${formatCurrency(currentMetric.netCashflow)}</strong></div>
+			</div>
+			<div class="col-sm-4">
+				<div class="small text-muted">Trading Change</div>
+				<div><strong>${currentMetric.tradingChange !== null ? formatCurrency(currentMetric.tradingChange) : "--"}</strong></div>
+			</div>
+			<div class="col-sm-4">
+				<div class="small text-muted">Trading %</div>
+				<div><strong>${currentMetric.tradingPct !== null ? formatPercent(currentMetric.tradingPct) : "--"}</strong></div>
+			</div>
+		</div>
+	`;
+
+	const footer = document.createElement("div");
+	footer.className = "d-flex flex-column gap-2 mt-3";
+
+	const cashflowToggle = document.createElement("button");
+	cashflowToggle.type = "button";
+	cashflowToggle.className = "btn btn-outline-secondary btn-sm";
+	cashflowToggle.textContent = "Add Cashflow";
+
+	const cashflowForm = document.createElement("div");
+	cashflowForm.className = "row g-2 w-100 mt-2 d-none";
+	cashflowForm.innerHTML = `
+		<div class="col-md-4">
+			<label class="form-label">Type</label>
+			<select class="form-select form-select-sm" data-field="type">
+				<option value="deposit">Deposit</option>
+				<option value="withdrawal">Withdrawal</option>
+			</select>
+		</div>
+		<div class="col-md-4">
+			<label class="form-label">Amount</label>
+			<input class="form-control form-control-sm" type="number" min="0" step="0.01" data-field="amount" />
+		</div>
+		<div class="col-md-4">
+			<label class="form-label">Note</label>
+			<input class="form-control form-control-sm" type="text" maxlength="80" data-field="note" />
+		</div>
+		<div class="col-12 d-flex justify-content-end">
+			<button type="button" class="btn btn-primary btn-sm" data-action="save">Save Cashflow</button>
+		</div>
+	`;
+
+	cashflowToggle.addEventListener("click", () => {
+		cashflowForm.classList.toggle("d-none");
 	});
+
+	const saveCashflowButton = cashflowForm.querySelector<HTMLButtonElement>('[data-action="save"]');
+	saveCashflowButton?.addEventListener("click", () => {
+		const type = (cashflowForm.querySelector('[data-field="type"]') as HTMLSelectElement).value as Cashflow["type"];
+		const amountValue = Number.parseFloat((cashflowForm.querySelector('[data-field="amount"]') as HTMLInputElement).value);
+		const noteValue = (cashflowForm.querySelector('[data-field="note"]') as HTMLInputElement).value.trim();
+		if (!Number.isFinite(amountValue) || amountValue <= 0) {
+			return;
+		}
+		addCashflow(currentMetric.entry.date, {
+			type,
+			amount: amountValue,
+			note: noteValue || undefined,
+		});
+		cashflowForm.classList.add("d-none");
+	});
+
+	const cashflowList = document.createElement("div");
+	cashflowList.className = "d-flex flex-wrap gap-2";
+	getCashflowsForDate(data.cashflows, currentMetric.entry.date).forEach((flow) => {
+		const pill = document.createElement("span");
+		pill.className = `cashflow-pill ${flow.type}`;
+		pill.textContent = `${flow.type === "deposit" ? "+" : "-"}${formatCurrency(flow.amount)} ${flow.note ?? ""}`.trim();
+		const remove = document.createElement("button");
+		remove.type = "button";
+		remove.className = "btn btn-link btn-sm p-0 ms-1";
+		remove.textContent = "×";
+		remove.addEventListener("click", () => removeCashflow(flow.id));
+		pill.appendChild(remove);
+		cashflowList.appendChild(pill);
+	});
+
+	const deleteButton = document.createElement("button");
+	deleteButton.type = "button";
+	deleteButton.className = "btn btn-outline-danger btn-sm";
+	deleteButton.textContent = "Remove Day";
+	deleteButton.addEventListener("click", () => {
+		data.days = data.days.filter((day) => day.id !== currentMetric.entry.id);
+		saveData(data);
+		renderAll(data);
+	});
+	footer.appendChild(cashflowToggle);
+	footer.appendChild(cashflowForm);
+	footer.appendChild(cashflowList);
+	footer.appendChild(deleteButton);
+
+	currentDayCard.appendChild(header);
+	currentDayCard.appendChild(body);
+	currentDayCard.appendChild(stats);
+	currentDayCard.appendChild(footer);
 }
 
 function getStatusClass(status: DayMetrics["status"]): string {
@@ -536,82 +570,130 @@ function renderHistory(metrics: DayMetrics[]): void {
 		})
 		.forEach((metric) => {
 			const row = document.createElement("tr");
-			row.innerHTML = `
-				<td>${metric.entry.date || "--"}</td>
-				<td>${metric.dayIndex}</td>
-				<td>${formatCurrency(metric.targetStart)}</td>
-				<td>${formatCurrency(metric.targetEnd)}</td>
-				<td>${metric.entry.actualClose !== null ? formatCurrency(metric.entry.actualClose) : "--"}</td>
-				<td>${metric.tradingPct !== null ? formatPercent(metric.tradingPct) : "--"}</td>
-				<td><span class="status-badge ${getStatusClass(metric.status)}">${getStatusLabel(metric.status, metric.entry)}</span></td>
-			`;
+			const dateCell = document.createElement("td");
+			const dateInput = document.createElement("input");
+			dateInput.type = "date";
+			dateInput.className = "form-control form-control-sm";
+			dateInput.value = metric.entry.date;
+			dateInput.addEventListener("change", () => updateDay(metric.entry.id, { date: dateInput.value }));
+			dateCell.appendChild(dateInput);
+
+			const dayCell = document.createElement("td");
+			dayCell.textContent = String(metric.dayIndex);
+
+			const targetStartCell = document.createElement("td");
+			targetStartCell.textContent = formatCurrency(metric.targetStart);
+
+			const targetEndCell = document.createElement("td");
+			targetEndCell.textContent = formatCurrency(metric.targetEnd);
+
+			const actualCell = document.createElement("td");
+			const actualInput = document.createElement("input");
+			actualInput.type = "number";
+			actualInput.min = "0";
+			actualInput.step = "0.01";
+			actualInput.className = "form-control form-control-sm";
+			actualInput.value = metric.entry.actualClose !== null ? String(metric.entry.actualClose) : "";
+			actualInput.disabled = metric.entry.noTrade;
+			actualInput.addEventListener("change", () => {
+				const value = Number.parseFloat(actualInput.value);
+				updateDay(metric.entry.id, { actualClose: Number.isFinite(value) ? value : null });
+			});
+			actualCell.appendChild(actualInput);
+
+			const pctCell = document.createElement("td");
+			pctCell.textContent = metric.tradingPct !== null ? formatPercent(metric.tradingPct) : "--";
+
+			const statusCell = document.createElement("td");
+			statusCell.innerHTML = `<span class="status-badge ${getStatusClass(metric.status)}">${getStatusLabel(metric.status, metric.entry)}</span>`;
+
+			const editCell = document.createElement("td");
+			const toggle = document.createElement("input");
+			toggle.type = "checkbox";
+			toggle.className = "form-check-input me-2";
+			toggle.checked = metric.entry.noTrade;
+			toggle.addEventListener("change", () => updateDay(metric.entry.id, { noTrade: toggle.checked }));
+			const cashflowButton = document.createElement("button");
+			cashflowButton.type = "button";
+			cashflowButton.className = "btn btn-outline-secondary btn-sm me-2";
+			cashflowButton.textContent = "Cashflow";
+			cashflowButton.addEventListener("click", () => setCurrentDay(metric.entry.id));
+			const removeButton = document.createElement("button");
+			removeButton.type = "button";
+			removeButton.className = "btn btn-outline-danger btn-sm";
+			removeButton.textContent = "Remove";
+			removeButton.addEventListener("click", () => removeDay(metric.entry.id));
+			editCell.appendChild(toggle);
+			editCell.appendChild(cashflowButton);
+			editCell.appendChild(removeButton);
+
+			row.appendChild(dateCell);
+			row.appendChild(dayCell);
+			row.appendChild(targetStartCell);
+			row.appendChild(targetEndCell);
+			row.appendChild(actualCell);
+			row.appendChild(pctCell);
+			row.appendChild(statusCell);
+			row.appendChild(editCell);
 			historyBody.appendChild(row);
 		});
 }
 
-function renderCashflows(data: TrackerData): void {
-	cashflowList.innerHTML = "";
-	data.cashflows.forEach((flow) => {
-		const item = document.createElement("div");
-		item.className = "d-flex justify-content-between align-items-center";
-		const sign = flow.type === "deposit" ? "+" : "-";
-		item.innerHTML = `
-			<div>
-				<strong>${flow.date}</strong> ${flow.note ? `- ${flow.note}` : ""}
-				<div class="small text-muted">${flow.type}</div>
-			</div>
-			<div class="d-flex align-items-center gap-2">
-				<span>${sign}${formatCurrency(flow.amount)}</span>
-				<button type="button" class="btn btn-outline-danger btn-sm">Remove</button>
-			</div>
-		`;
-		const removeButton = item.querySelector("button");
-		if (removeButton) {
-			removeButton.addEventListener("click", () => {
-				data.cashflows = data.cashflows.filter((itemFlow) => itemFlow.id !== flow.id);
-				saveData(data);
-				renderAll(data);
-			});
-		}
-		cashflowList.appendChild(item);
-	});
-}
-
-function renderChart(data: TrackerData, metrics: DayMetrics[]): void {
-	if (!data.settings) {
-		chartTargetPath.setAttribute("d", "");
-		chartActualPath.setAttribute("d", "");
+function updateDay(id: string, update: Partial<DayEntry>): void {
+	const data = loadData();
+	const day = data.days.find((item) => item.id === id);
+	if (!day) {
 		return;
 	}
-
-	const targets: number[] = [data.settings.startingCapital];
-	const actuals: number[] = [data.settings.startingCapital];
-	metrics.forEach((metric) => {
-		targets.push(metric.targetEnd);
-		actuals.push(metric.entry.actualClose ?? metric.equityValue);
-	});
-
-	const allValues = [...targets, ...actuals];
-	const minValue = Math.min(...allValues);
-	const maxValue = Math.max(...allValues);
-	const range = maxValue - minValue || 1;
-
-	const width = 600;
-	const height = 240;
-
-	function buildPath(values: number[]): string {
-		return values
-			.map((value, index) => {
-				const x = (index / (values.length - 1 || 1)) * width;
-				const normalized = (value - minValue) / range;
-				const y = height - normalized * height;
-				return `${index === 0 ? "M" : "L"}${x},${y}`;
-			})
-			.join(" ");
+	Object.assign(day, update);
+	if (day.noTrade) {
+		day.actualClose = day.actualClose ?? null;
 	}
+	saveData(data);
+	renderAll(data);
+}
 
-	chartTargetPath.setAttribute("d", buildPath(targets));
-	chartActualPath.setAttribute("d", buildPath(actuals));
+function removeDay(id: string): void {
+	const data = loadData();
+	data.days = data.days.filter((day) => day.id !== id);
+	saveData(data);
+	renderAll(data);
+}
+
+function getCashflowsForDate(cashflows: Cashflow[], date: string): Cashflow[] {
+	return cashflows.filter((flow) => flow.date === date);
+}
+
+function addCashflow(date: string, payload: Omit<Cashflow, "id" | "date">): void {
+	const data = loadData();
+	data.cashflows.push({
+		id: generateId("cashflow"),
+		date,
+		amount: payload.amount,
+		type: payload.type,
+		note: payload.note,
+	});
+	saveData(data);
+	renderAll(data);
+}
+
+function removeCashflow(id: string): void {
+	const data = loadData();
+	data.cashflows = data.cashflows.filter((flow) => flow.id !== id);
+	saveData(data);
+	renderAll(data);
+}
+
+function setCurrentDay(dayId: string): void {
+	const data = loadData();
+	const index = data.days.findIndex((day) => day.id === dayId);
+	if (index < 0) {
+		return;
+	}
+	const day = data.days.splice(index, 1)[0];
+	data.days.push(day);
+	saveData(data);
+	renderAll(data);
 }
 
 function renderMetrics(metrics: DayMetrics[]): void {
@@ -650,60 +732,13 @@ function renderMetrics(metrics: DayMetrics[]): void {
 	metricGreenStreak.textContent = greenStreak.toString();
 }
 
-function renderWithdrawalSuggestion(data: TrackerData, metrics: DayMetrics[]): void {
-	if (!data.settings) {
-		withdrawSuggestion.textContent = formatCurrency(0);
-		withdrawNote.textContent = "";
-		return;
-	}
-
-	const lastActual = metrics.slice().reverse().find((metric) => metric.entry.actualClose !== null);
-	const equity = lastActual?.entry.actualClose ?? data.settings.startingCapital;
-
-	let highWaterMark = data.settings.startingCapital;
-	metrics.forEach((metric) => {
-		if (metric.entry.actualClose !== null) {
-			highWaterMark = Math.max(highWaterMark, metric.entry.actualClose);
-		}
-	});
-
-	const rate = data.withdrawal.rate / 100;
-	const buffer = data.withdrawal.buffer;
-	let base = 0;
-	let note = "";
-
-	switch (data.withdrawal.rule) {
-		case "profit_start":
-			base = Math.max(0, equity - data.settings.startingCapital);
-			note = "Based on profits above your starting capital.";
-			break;
-		case "profit_hwm": {
-			const threshold = Math.max(data.settings.startingCapital, highWaterMark - buffer);
-			base = Math.max(0, equity - threshold);
-			note = `Based on profits above your high-water mark with a ${formatCurrency(buffer)} buffer.`;
-			break;
-		}
-		case "goal_only":
-			base = Math.max(0, equity - data.settings.targetGoal);
-			note = "Only withdraw after you exceed your goal equity.";
-			break;
-	}
-
-	const suggestion = base * rate;
-	withdrawSuggestion.textContent = formatCurrency(suggestion);
-	withdrawNote.textContent = note;
-}
-
 function renderAll(data: TrackerData): void {
 	const metrics = buildMetrics(data);
 	renderSummary(data, metrics);
 	renderTargetPanel(data, metrics);
 	renderDays(data, metrics);
 	renderHistory(metrics);
-	renderCashflows(data);
-	renderChart(data, metrics);
 	renderMetrics(metrics);
-	renderWithdrawalSuggestion(data, metrics);
 }
 
 setupForm.addEventListener("submit", (event) => {
@@ -717,11 +752,11 @@ setupForm.addEventListener("submit", (event) => {
 	};
 
 	data.settings = settings;
-	if (!data.withdrawal.buffer) {
-		data.withdrawal.buffer = settings.startingCapital * 0.1;
-	}
 	saveData(data);
 	renderAll(data);
+	if (settingsDialog.open) {
+		settingsDialog.close();
+	}
 });
 
 resetAllButton.addEventListener("click", () => {
@@ -745,29 +780,16 @@ addDayButton.addEventListener("click", () => {
 	renderAll(data);
 });
 
-cashflowForm.addEventListener("submit", (event) => {
-	event.preventDefault();
-	const data = loadData();
-	const flow: Cashflow = {
-		id: generateId("cashflow"),
-		date: cashflowDateInput.value,
-		type: cashflowTypeInput.value as Cashflow["type"],
-		amount: parseNumber(cashflowAmountInput),
-		note: cashflowNoteInput.value.trim() || undefined,
-	};
-	data.cashflows.push(flow);
-	saveData(data);
-	cashflowForm.reset();
-	renderAll(data);
+openSettingsButton.addEventListener("click", () => {
+	if (!settingsDialog.open) {
+		settingsDialog.showModal();
+	}
 });
 
-saveWithdrawSettings.addEventListener("click", () => {
-	const data = loadData();
-	data.withdrawal.rule = withdrawRuleInput.value as WithdrawalRule;
-	data.withdrawal.rate = parseNumber(withdrawRateInput);
-	data.withdrawal.buffer = parseNumber(withdrawBufferInput);
-	saveData(data);
-	renderAll(data);
+closeSettingsButton.addEventListener("click", () => {
+	if (settingsDialog.open) {
+		settingsDialog.close();
+	}
 });
 
 exportButton.addEventListener("click", () => {
@@ -809,10 +831,6 @@ filterButtons.forEach((button) => {
 });
 
 function hydrateForm(data: TrackerData): void {
-	withdrawRuleInput.value = data.withdrawal.rule;
-	withdrawRateInput.value = String(data.withdrawal.rate);
-	withdrawBufferInput.value = String(data.withdrawal.buffer);
-
 	if (!data.settings) {
 		return;
 	}
@@ -825,3 +843,7 @@ function hydrateForm(data: TrackerData): void {
 const initialData = loadData();
 hydrateForm(initialData);
 renderAll(initialData);
+
+if (!initialData.settings) {
+	settingsDialog.showModal();
+}

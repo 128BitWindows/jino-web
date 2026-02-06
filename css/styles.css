@@ -1,260 +1,513 @@
-/* General styling applied to all pages */
+/* ========================================
+   General Styling
+   ======================================== */
 html, body {
-  height: 100%;
-  margin: 0;
+	height: 100%;
+	margin: 0;
 }
 
 body {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 
 .content-wrapper {
-  flex: 1 0 auto;
+	flex: 1 0 auto;
 }
 
 footer {
-  flex-shrink: 0;
+	flex-shrink: 0;
 }
 
-.card:hover {
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  transform: scale(1.02);
+/* ========================================
+   Home Page Styles (#home-page)
+   ======================================== */
+
+/* Hero Section */
+#home-page .hero-section {
+	background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+	color: #fff;
+	padding: 6rem 0;
+	text-align: center;
 }
 
-.card {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+#home-page .hero-greeting {
+	font-size: 1.1rem;
+	letter-spacing: 0.15em;
+	text-transform: uppercase;
+	opacity: 0.8;
+	margin-bottom: 0.5rem;
 }
 
-/* Styles specific to pizza.html */
+#home-page .hero-title {
+	font-size: 4rem;
+	font-weight: 700;
+	margin-bottom: 1rem;
+	letter-spacing: -0.02em;
+}
+
+#home-page .hero-subtitle {
+	font-size: 1.25rem;
+	opacity: 0.9;
+	margin-bottom: 2rem;
+}
+
+#home-page .hero-cta {
+	border-radius: 50px;
+	padding: 0.75rem 2rem;
+	font-weight: 600;
+	transition: transform 0.2s, box-shadow 0.2s;
+}
+
+#home-page .hero-cta:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Section Titles */
+#home-page .section-title {
+	font-size: 2rem;
+	font-weight: 700;
+	text-align: center;
+	margin-bottom: 2.5rem;
+	color: #1a1a2e;
+}
+
+/* About Section */
+#home-page .about-section {
+	padding: 5rem 0;
+	background: #fff;
+}
+
+#home-page .about-content {
+	max-width: 700px;
+	margin: 0 auto;
+	text-align: center;
+}
+
+#home-page .about-content p {
+	font-size: 1.15rem;
+	line-height: 1.8;
+	color: #4a5568;
+}
+
+/* Portfolio Section */
+#home-page .portfolio-section {
+	padding: 5rem 0;
+	background: #f8fafc;
+}
+
+#home-page .project-card {
+	background: #fff;
+	border-radius: 16px;
+	padding: 2rem;
+	height: 100%;
+	transition: transform 0.3s, box-shadow 0.3s;
+	border: 1px solid #e2e8f0;
+	text-align: center;
+}
+
+#home-page .project-card:hover {
+	transform: translateY(-8px);
+	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+}
+
+#home-page .project-card-coming-soon {
+	opacity: 0.6;
+}
+
+#home-page .project-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+#home-page .project-title {
+	font-size: 1.25rem;
+	font-weight: 600;
+	color: #1a1a2e;
+	margin-bottom: 0.75rem;
+}
+
+#home-page .project-description {
+	font-size: 0.95rem;
+	color: #64748b;
+	margin-bottom: 0;
+	line-height: 1.6;
+}
+
+/* Footer */
+#home-page .site-footer {
+	background: #1a1a2e;
+	color: #fff;
+	padding: 2rem 0;
+}
+
+#home-page .footer-content {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 1rem;
+}
+
+#home-page .footer-copy {
+	margin: 0;
+	opacity: 0.8;
+}
+
+#home-page .footer-links {
+	display: flex;
+	gap: 1.5rem;
+}
+
+#home-page .footer-link {
+	color: #fff;
+	text-decoration: none;
+	opacity: 0.8;
+	transition: opacity 0.2s;
+}
+
+#home-page .footer-link:hover {
+	opacity: 1;
+	color: #fff;
+}
+
+/* ========================================
+   Pizza Calculator Styles (#pizza-calculator)
+   ======================================== */
 #pizza-calculator {
-  color: #333;
-  padding: 2rem 0;
+	color: #333;
+	padding: 2rem 0;
 }
 
 #pizza-calculator .container {
-  max-width: 800px;
-  background: rgba(255, 255, 255, 0.95);
-  padding: 2rem;
-  border-radius: 15px;
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+	max-width: 800px;
+	background: rgba(255, 255, 255, 0.95);
+	padding: 2rem;
+	border-radius: 15px;
+	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
 }
 
 #pizza-calculator h1 {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+	font-size: 2.5rem;
+	margin-bottom: 1rem;
+	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 #pizza-calculator label {
-  font-weight: bold;
+	font-weight: bold;
 }
 
 #pizza-calculator .emoji-icon {
-  font-size: 48px;
-  transition: transform 0.3s;
-  display: inline-block;
+	font-size: 48px;
+	transition: transform 0.3s;
+	display: inline-block;
 }
 
 #pizza-calculator .animate-icon:hover {
-  transform: scale(1.2) rotate(5deg);
+	transform: scale(1.2) rotate(5deg);
 }
 
 #pizza-calculator #result {
-  font-size: 1.25rem;
-  text-align: center;
-  margin-top: 1rem;
+	font-size: 1.25rem;
+	text-align: center;
+	margin-top: 1rem;
 }
 
-/* Styles specific to trade-tracker.html */
+/* ========================================
+   Trade Tracker Styles (#trade-tracker)
+   ======================================== */
 #trade-tracker {
-  background: radial-gradient(circle at top, #f7f7f7 0%, #ffffff 55%, #f3f3f3 100%);
+	background: #f8fafc;
+}
+
+#trade-tracker .navbar {
+	padding: 0.75rem 0;
+}
+
+#trade-tracker .navbar-brand {
+	font-weight: 600;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+#trade-tracker .navbar-back-icon {
+	font-size: 1.1rem;
 }
 
 #trade-tracker .tracker-hero {
-  padding: 1.5rem 1rem;
-  border-radius: 20px;
-  background: linear-gradient(135deg, #fff8e7, #eef6ff);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+	padding: 1.5rem;
+	border-radius: 16px;
+	background: #fff;
+	border: 1px solid #e2e8f0;
 }
 
-#trade-tracker .panel {
-  background: #ffffff;
-  border-radius: 18px;
-  padding: 1.5rem;
-  box-shadow: 0 12px 28px rgba(15, 30, 50, 0.08);
+#trade-tracker .tracker-title {
+	font-size: 1.75rem;
+	font-weight: 700;
+	margin-bottom: 0.25rem;
+	color: #1a1a2e;
 }
 
-#trade-tracker .panel-title {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-}
-
-#trade-tracker .summary-card {
-  background: #111827;
-  color: #f9fafb;
-  padding: 1.25rem;
-  border-radius: 16px;
-  min-height: 110px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-#trade-tracker .summary-label {
-  font-size: 0.85rem;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  margin-bottom: 0.35rem;
-  opacity: 0.7;
-}
-
-#trade-tracker .summary-value {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin: 0;
+#trade-tracker .tracker-subtitle {
+	color: #64748b;
+	margin-bottom: 0;
+	font-size: 0.95rem;
 }
 
 #trade-tracker .settings-button {
-  border-radius: 999px;
-  padding: 0.4rem 1rem;
+	border-radius: 8px;
+	padding: 0.5rem 1rem;
+	font-weight: 500;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+#trade-tracker .settings-icon {
+	font-size: 1rem;
+}
+
+#trade-tracker .panel {
+	background: #fff;
+	border-radius: 16px;
+	padding: 1.5rem;
+	border: 1px solid #e2e8f0;
+	height: 100%;
+}
+
+#trade-tracker .panel-title {
+	font-size: 1rem;
+	font-weight: 600;
+	margin-bottom: 1rem;
+	color: #374151;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+}
+
+#trade-tracker .summary-card {
+	background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+	color: #fff;
+	padding: 1.25rem;
+	border-radius: 12px;
+	min-height: 100px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+#trade-tracker .summary-label {
+	font-size: 0.75rem;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	margin-bottom: 0.35rem;
+	opacity: 0.7;
+}
+
+#trade-tracker .summary-value {
+	font-size: 1.5rem;
+	font-weight: 700;
+	margin: 0;
 }
 
 #trade-tracker .settings-dialog {
-  border: none;
-  padding: 0;
-  width: min(720px, 92vw);
-  border-radius: 18px;
-  box-shadow: 0 25px 50px rgba(15, 30, 50, 0.2);
+	border: none;
+	padding: 0;
+	width: min(720px, 92vw);
+	border-radius: 16px;
+	box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
 }
 
 #trade-tracker .settings-dialog::backdrop {
-  background: rgba(15, 23, 42, 0.45);
+	background: rgba(0, 0, 0, 0.5);
 }
 
 #trade-tracker .settings-panel {
-  margin: 0;
+	margin: 0;
 }
 
 #trade-tracker .current-day-card {
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  padding: 1rem;
-  background: #fafafa;
+	border: 1px solid #e2e8f0;
+	border-radius: 12px;
+	padding: 1rem;
+	background: #f8fafc;
 }
 
 #trade-tracker .current-day-card .form-label {
-  font-size: 0.9rem;
+	font-size: 0.9rem;
 }
 
 #trade-tracker .target-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 1rem;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+	gap: 1rem;
 }
 
 #trade-tracker .target-label {
-  margin-bottom: 0.35rem;
-  color: #6b7280;
-  font-size: 0.9rem;
+	margin-bottom: 0.25rem;
+	color: #64748b;
+	font-size: 0.8rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
 }
 
 #trade-tracker .target-value {
-  font-weight: 700;
-  font-size: 1.1rem;
-  margin-bottom: 0;
+	font-weight: 700;
+	font-size: 1.1rem;
+	margin-bottom: 0;
+	color: #1a1a2e;
 }
 
 #trade-tracker .v-stack {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
 }
 
 #trade-tracker .day-card {
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  padding: 1rem;
-  background: #fafafa;
+	border: 1px solid #e2e8f0;
+	border-radius: 12px;
+	padding: 1rem;
+	background: #f8fafc;
 }
 
 #trade-tracker .day-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.5rem;
 }
 
 #trade-tracker .status-badge {
-  padding: 0.35rem 0.75rem;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  font-weight: 600;
+	padding: 0.35rem 0.75rem;
+	border-radius: 6px;
+	font-size: 0.75rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.03em;
 }
 
 #trade-tracker .status-goal {
-  background: #d1fae5;
-  color: #065f46;
+	background: #d1fae5;
+	color: #065f46;
 }
 
 #trade-tracker .status-green {
-  background: #ecfdf5;
-  color: #047857;
+	background: #ecfdf5;
+	color: #047857;
 }
 
 #trade-tracker .status-neutral {
-  background: #fef3c7;
-  color: #92400e;
+	background: #fef3c7;
+	color: #92400e;
 }
 
 #trade-tracker .status-red {
-  background: #fee2e2;
-  color: #991b1b;
+	background: #fee2e2;
+	color: #991b1b;
 }
 
 #trade-tracker .status-pending {
-  background: #e5e7eb;
-  color: #374151;
+	background: #e2e8f0;
+	color: #475569;
 }
 
 #trade-tracker .metric {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #e5e7eb;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.65rem 0;
+	border-bottom: 1px solid #e2e8f0;
+	font-size: 0.95rem;
 }
 
 #trade-tracker .metric:last-child {
-  border-bottom: none;
+	border-bottom: none;
+}
+
+#trade-tracker .metric span {
+	color: #64748b;
+}
+
+#trade-tracker .metric strong {
+	color: #1a1a2e;
+}
+
+#trade-tracker .filter-button {
+	border-radius: 6px;
+	font-size: 0.85rem;
+	padding: 0.4rem 0.75rem;
 }
 
 #trade-tracker .filter-button.active {
-  background: #111827;
-  color: #f9fafb;
-  border-color: #111827;
+	background: #1a1a2e;
+	color: #fff;
+	border-color: #1a1a2e;
 }
 
 #trade-tracker .cashflow-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.35rem 0.6rem;
-  border-radius: 999px;
-  font-size: 0.8rem;
-  background: #e2e8f0;
-  color: #1f2937;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	padding: 0.35rem 0.6rem;
+	border-radius: 6px;
+	font-size: 0.8rem;
+	background: #e2e8f0;
+	color: #1f2937;
 }
 
 #trade-tracker .cashflow-pill.deposit {
-  background: #dcfce7;
-  color: #14532d;
+	background: #dcfce7;
+	color: #14532d;
 }
 
 #trade-tracker .cashflow-pill.withdrawal {
-  background: #fee2e2;
-  color: #7f1d1d;
+	background: #fee2e2;
+	color: #7f1d1d;
+}
+
+#trade-tracker .table {
+	font-size: 0.9rem;
+}
+
+#trade-tracker .table th {
+	font-weight: 600;
+	color: #64748b;
+	text-transform: uppercase;
+	font-size: 0.75rem;
+	letter-spacing: 0.05em;
+	border-bottom-width: 1px;
+}
+
+#trade-tracker .table td {
+	vertical-align: middle;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+	#home-page .hero-title {
+		font-size: 2.5rem;
+	}
+
+	#home-page .hero-section {
+		padding: 4rem 0;
+	}
+
+	#home-page .footer-content {
+		flex-direction: column;
+		text-align: center;
+	}
+
+	#trade-tracker .tracker-hero {
+		text-align: center;
+	}
+
+	#trade-tracker .tracker-hero > div {
+		flex-direction: column;
+		align-items: center !important;
+	}
 }

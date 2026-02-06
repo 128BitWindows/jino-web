@@ -8,21 +8,23 @@
 	<link rel="stylesheet" href="css/styles.css">
 </head>
 <body id="trade-tracker">
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<nav class="navbar navbar-dark bg-dark">
 		<div class="container">
-			<a class="navbar-brand" href="index.html">Back to Home Page</a>
+			<a class="navbar-brand" href="index.html">
+				<span class="navbar-back-icon">←</span> Jino
+			</a>
 		</div>
 	</nav>
 
-	<main class="container my-5">
-		<section class="tracker-hero text-center mb-5">
-			<div class="d-flex justify-content-between align-items-start flex-wrap gap-2">
-				<div class="flex-grow-1 text-start">
-					<h1 class="display-5 mb-2">Trade Tracker</h1>
-					<p class="lead mb-0">Set compounding goals, log each trading day, and stay accountable.</p>
+	<main class="container my-4">
+		<section class="tracker-hero mb-4">
+			<div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+				<div>
+					<h1 class="tracker-title">Trade Tracker</h1>
+					<p class="tracker-subtitle">Set compounding goals, log each trading day, and stay accountable.</p>
 				</div>
-				<button type="button" id="openSettings" class="btn btn-outline-dark btn-sm settings-button" aria-label="Open settings">
-					Settings
+				<button type="button" id="openSettings" class="btn btn-dark settings-button" aria-label="Open settings">
+					<span class="settings-icon">⚙</span> Settings
 				</button>
 			</div>
 		</section>

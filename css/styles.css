@@ -389,6 +389,8 @@ footer {
 	font-weight: 600;
 	text-transform: uppercase;
 	letter-spacing: 0.03em;
+	white-space: nowrap;
+	display: inline-block;
 }
 
 #trade-tracker .status-goal {
@@ -485,6 +487,28 @@ footer {
 
 #trade-tracker .table td {
 	vertical-align: middle;
+}
+
+#trade-tracker .edit-cell {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+	min-width: 180px;
+}
+
+#trade-tracker .no-trade-toggle {
+	display: flex;
+	align-items: center;
+	gap: 0.35rem;
+	font-size: 0.85rem;
+	color: #64748b;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+#trade-tracker .edit-buttons {
+	display: flex;
+	gap: 0.5rem;
 }
 
 /* Responsive adjustments */

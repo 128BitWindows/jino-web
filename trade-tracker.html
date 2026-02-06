@@ -89,48 +89,21 @@
 			</div>
 		</section>
 
-		<section class="row g-4 mb-5">
-			<div class="col-lg-4">
+		<section class="row g-4 mb-4">
+			<div class="col-12">
 				<div class="panel">
-					<h2 class="panel-title">Accountability</h2>
-					<div class="metric">
-						<span>Win Rate</span>
-						<strong id="metricWinRate">0%</strong>
-					</div>
-					<div class="metric">
-						<span>Avg Green Day</span>
-						<strong id="metricAvgGreen">0%</strong>
-					</div>
-					<div class="metric">
-						<span>Avg Red Day</span>
-						<strong id="metricAvgRed">0%</strong>
-					</div>
-					<div class="metric">
-						<span>Profit Factor</span>
-						<strong id="metricProfitFactor">0</strong>
-					</div>
-					<div class="metric">
-						<span>Goal-Hit Streak</span>
-						<strong id="metricGoalStreak">0</strong>
-					</div>
-					<div class="metric">
-						<span>Green Streak</span>
-						<strong id="metricGreenStreak">0</strong>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-8">
-				<div class="panel">
-					<h2 class="panel-title">History</h2>
-					<div class="d-flex flex-wrap gap-2 mb-3">
-						<button type="button" class="btn btn-outline-secondary filter-button active" data-filter="all">All</button>
-						<button type="button" class="btn btn-outline-secondary filter-button" data-filter="goal">Met Goal</button>
-						<button type="button" class="btn btn-outline-secondary filter-button" data-filter="green">Green</button>
-						<button type="button" class="btn btn-outline-secondary filter-button" data-filter="neutral">Neutral</button>
-						<button type="button" class="btn btn-outline-secondary filter-button" data-filter="red">Red</button>
+					<div class="d-flex justify-content-between align-items-center flex-wrap gap-2 mb-3">
+						<h2 class="panel-title mb-0">History</h2>
+						<div class="d-flex flex-wrap gap-2">
+							<button type="button" class="btn btn-outline-secondary filter-button active" data-filter="all">All</button>
+							<button type="button" class="btn btn-outline-secondary filter-button" data-filter="goal">Met Goal</button>
+							<button type="button" class="btn btn-outline-secondary filter-button" data-filter="green">Green</button>
+							<button type="button" class="btn btn-outline-secondary filter-button" data-filter="neutral">Neutral</button>
+							<button type="button" class="btn btn-outline-secondary filter-button" data-filter="red">Red</button>
+						</div>
 					</div>
 					<div class="table-responsive">
-						<table class="table table-striped align-middle">
+						<table class="table table-striped align-middle mb-0">
 							<thead>
 								<tr>
 									<th>Date</th>
@@ -140,7 +113,7 @@
 									<th>Actual Close</th>
 									<th>Trading %</th>
 									<th>Status</th>
-									<th>Edit</th>
+									<th>Actions</th>
 								</tr>
 							</thead>
 							<tbody id="historyBody"></tbody>
@@ -149,6 +122,16 @@
 				</div>
 			</div>
 		</section>
+
+		<!-- Hidden metrics for JS compatibility -->
+		<div class="d-none">
+			<span id="metricWinRate"></span>
+			<span id="metricAvgGreen"></span>
+			<span id="metricAvgRed"></span>
+			<span id="metricProfitFactor"></span>
+			<span id="metricGoalStreak"></span>
+			<span id="metricGreenStreak"></span>
+		</div>
 	</main>
 
 	<script src="./tradeTracker.js" defer></script>

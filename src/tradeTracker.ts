@@ -608,14 +608,23 @@ function renderHistory(metrics: DayMetrics[]): void {
 			statusCell.innerHTML = `<span class="status-badge ${getStatusClass(metric.status)}">${getStatusLabel(metric.status, metric.entry)}</span>`;
 
 			const editCell = document.createElement("td");
+			editCell.className = "edit-cell";
+
+			const noTradeLabel = document.createElement("label");
+			noTradeLabel.className = "no-trade-toggle";
 			const toggle = document.createElement("input");
 			toggle.type = "checkbox";
-			toggle.className = "form-check-input me-2";
+			toggle.className = "form-check-input";
 			toggle.checked = metric.entry.noTrade;
 			toggle.addEventListener("change", () => updateDay(metric.entry.id, { noTrade: toggle.checked }));
+			noTradeLabel.appendChild(toggle);
+			noTradeLabel.appendChild(document.createTextNode(" No Trade"));
+
+			const buttonGroup = document.createElement("div");
+			buttonGroup.className = "edit-buttons";
 			const cashflowButton = document.createElement("button");
 			cashflowButton.type = "button";
-			cashflowButton.className = "btn btn-outline-secondary btn-sm me-2";
+			cashflowButton.className = "btn btn-outline-secondary btn-sm";
 			cashflowButton.textContent = "Cashflow";
 			cashflowButton.addEventListener("click", () => setCurrentDay(metric.entry.id));
 			const removeButton = document.createElement("button");
@@ -623,9 +632,11 @@ function renderHistory(metrics: DayMetrics[]): void {
 			removeButton.className = "btn btn-outline-danger btn-sm";
 			removeButton.textContent = "Remove";
 			removeButton.addEventListener("click", () => removeDay(metric.entry.id));
-			editCell.appendChild(toggle);
-			editCell.appendChild(cashflowButton);
-			editCell.appendChild(removeButton);
+			buttonGroup.appendChild(cashflowButton);
+			buttonGroup.appendChild(removeButton);
+
+			editCell.appendChild(noTradeLabel);
+			editCell.appendChild(buttonGroup);
 
 			row.appendChild(dateCell);
 			row.appendChild(dayCell);

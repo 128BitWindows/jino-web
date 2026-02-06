@@ -578,6 +578,7 @@ function renderHistory(metrics: DayMetrics[]): void {
 		.forEach((metric) => {
 			const row = document.createElement("tr");
 			const dateCell = document.createElement("td");
+			dateCell.setAttribute("data-label", "Date");
 			const dateInput = document.createElement("input");
 			dateInput.type = "date";
 			dateInput.className = "form-control form-control-sm";
@@ -586,15 +587,19 @@ function renderHistory(metrics: DayMetrics[]): void {
 			dateCell.appendChild(dateInput);
 
 			const dayCell = document.createElement("td");
+			dayCell.setAttribute("data-label", "Day");
 			dayCell.textContent = String(metric.dayIndex);
 
 			const targetStartCell = document.createElement("td");
+			targetStartCell.setAttribute("data-label", "Target Start");
 			targetStartCell.textContent = formatCurrency(metric.targetStart);
 
 			const targetEndCell = document.createElement("td");
+			targetEndCell.setAttribute("data-label", "Target End");
 			targetEndCell.textContent = formatCurrency(metric.targetEnd);
 
 			const actualCell = document.createElement("td");
+			actualCell.setAttribute("data-label", "Actual Close");
 			const actualInput = document.createElement("input");
 			actualInput.type = "number";
 			actualInput.min = "0";
@@ -609,12 +614,15 @@ function renderHistory(metrics: DayMetrics[]): void {
 			actualCell.appendChild(actualInput);
 
 			const pctCell = document.createElement("td");
+			pctCell.setAttribute("data-label", "Trading %");
 			pctCell.textContent = metric.tradingPct !== null ? formatPercent(metric.tradingPct) : "--";
 
 			const statusCell = document.createElement("td");
+			statusCell.setAttribute("data-label", "Status");
 			statusCell.innerHTML = `<span class="status-badge ${getStatusClass(metric.status)}">${getStatusLabel(metric.status, metric.entry)}</span>`;
 
 			const editCell = document.createElement("td");
+			editCell.setAttribute("data-label", "Actions");
 			editCell.className = "edit-cell";
 
 			const noTradeLabel = document.createElement("label");

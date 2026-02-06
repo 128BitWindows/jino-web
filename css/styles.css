@@ -438,6 +438,11 @@ footer {
 	background: rgba(0, 0, 0, 0.5);
 }
 
+#trade-tracker .startup-icon {
+	font-size: 3rem;
+	margin-bottom: 0.5rem;
+}
+
 #trade-tracker .settings-panel {
 	margin: 0;
 }

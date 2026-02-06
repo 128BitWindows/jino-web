@@ -52,6 +52,13 @@ const openSettingsButton = getRequiredElement<HTMLButtonElement>("openSettings")
 const closeSettingsButton = getRequiredElement<HTMLButtonElement>("closeSettings");
 const settingsDialog = getRequiredElement<HTMLDialogElement>("settingsDialog");
 
+const startupDialog = getRequiredElement<HTMLDialogElement>("startupDialog");
+const startupForm = getRequiredElement<HTMLFormElement>("startupForm");
+const startupCapitalInput = getRequiredElement<HTMLInputElement>("startupCapital");
+const startupTargetPctInput = getRequiredElement<HTMLInputElement>("startupTargetPct");
+const startupDateInput = getRequiredElement<HTMLInputElement>("startupDate");
+const startupGoalInput = getRequiredElement<HTMLInputElement>("startupGoal");
+
 const summaryEquity = getRequiredElement<HTMLParagraphElement>("summaryEquity");
 const summaryTargetEnd = getRequiredElement<HTMLParagraphElement>("summaryTargetEnd");
 const summaryTargetPct = getRequiredElement<HTMLParagraphElement>("summaryTargetPct");
@@ -841,6 +848,31 @@ filterButtons.forEach((button) => {
 	});
 });
 
+// Prevent escape key from closing startup dialog
+startupDialog.addEventListener("cancel", (event) => {
+	event.preventDefault();
+});
+
+// Handle startup form submission
+startupForm.addEventListener("submit", (event) => {
+	event.preventDefault();
+	const data = loadData();
+	const settings: Settings = {
+		startingCapital: parseNumber(startupCapitalInput),
+		dailyTargetPct: parseNumber(startupTargetPctInput),
+		startDate: startupDateInput.value,
+		targetGoal: parseNumber(startupGoalInput),
+	};
+
+	data.settings = settings;
+	saveData(data);
+
+	// Sync the settings form with the new values
+	hydrateForm(data);
+	renderAll(data);
+	startupDialog.close();
+});
+
 function hydrateForm(data: TrackerData): void {
 	if (!data.settings) {
 		return;
@@ -856,5 +888,7 @@ hydrateForm(initialData);
 renderAll(initialData);
 
 if (!initialData.settings) {
-	settingsDialog.showModal();
+	// Set default date to today for startup form
+	startupDateInput.value = getTodayString();
+	startupDialog.showModal();
 }

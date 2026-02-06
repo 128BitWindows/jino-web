@@ -136,6 +136,37 @@
 
 	<script src="./tradeTracker.js" defer></script>
 
+	<dialog id="startupDialog" class="settings-dialog">
+		<form id="startupForm" class="panel settings-panel">
+			<div class="text-center mb-4">
+				<div class="startup-icon">📈</div>
+				<h2 class="panel-title mb-2">Welcome to Trade Tracker</h2>
+				<p class="text-muted mb-0">Set up your trading goals to get started.</p>
+			</div>
+			<div class="row g-3">
+				<div class="col-md-6">
+					<label class="form-label" for="startupCapital">Starting Capital</label>
+					<input class="form-control" id="startupCapital" type="number" min="0" step="0.01" placeholder="10000" required />
+				</div>
+				<div class="col-md-6">
+					<label class="form-label" for="startupTargetPct">Daily Target %</label>
+					<input class="form-control" id="startupTargetPct" type="number" min="0" step="0.01" placeholder="1" required />
+				</div>
+				<div class="col-md-6">
+					<label class="form-label" for="startupDate">Start Date (Day 1)</label>
+					<input class="form-control" id="startupDate" type="date" required />
+				</div>
+				<div class="col-md-6">
+					<label class="form-label" for="startupGoal">Target Goal</label>
+					<input class="form-control" id="startupGoal" type="number" min="0" step="0.01" placeholder="25000" required />
+				</div>
+				<div class="col-12">
+					<button type="submit" class="btn btn-primary w-100">Start Tracking</button>
+				</div>
+			</div>
+		</form>
+	</dialog>
+
 	<dialog id="settingsDialog" class="settings-dialog">
 		<form id="setupForm" class="panel settings-panel" method="dialog">
 			<div class="d-flex justify-content-between align-items-center mb-3">

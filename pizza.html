@@ -3,52 +3,69 @@
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
-	<title>Fun Pizza Calculator</title>
+	<title>Pizza Sizing Tool</title>
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
 	<link rel="stylesheet" href="css/styles.css">
 </head>
 <body id="pizza-calculator">
-	<nav class="navbar navbar-expand-lg navbar-light bg-light">
+	<nav class="navbar navbar-dark bg-dark">
 		<div class="container">
-			<a class="navbar-brand" href="index.html">Back to Home Page</a>
+			<a class="navbar-brand" href="index.html">
+				<span class="navbar-back-icon">←</span> Jino
+			</a>
 		</div>
 	</nav>
-	
-	<main class="container mt-5">
-		<h1 class="text-center mb-4">Pizza Sizing Tool</h1>
-		<form id="pizzaForm" class="mb-4">
-			<div class="mb-3">
-				<label for="numGuests" class="form-label">
-					Number of Guests: <span id="numGuestsValue">1</span>
-				</label>
-				<input type="range" class="form-range" id="numGuests" min="1" max="50" value="1" />
-			</div>
-			<div class="mb-3">
-				<label for="slicesPerPerson" class="form-label">
-					Slices Per Person: <span id="slicesPerPersonValue">1</span>
-				</label>
-				<input type="range" class="form-range" id="slicesPerPerson" min="1" max="10" value="1" />
-			</div>
-			<div class="mb-3">
-				<label for="slicesPerPizza" class="form-label">
-					Slices Per Pizza: <span id="slicesPerPizzaValue">8</span>
-				</label>
-				<input type="range" class="form-range" id="slicesPerPizza" min="1" max="12" value="8" />
-			</div>
-		</form>
 
-		<div class="row mb-4">
-			<div class="col text-center">
-				<h3>Guests</h3>
-				<div id="guestsContainer"></div>
-			</div>
-			<div class="col text-center">
-				<h3>Pizzas</h3>
-				<div id="pizzasContainer"></div>
-			</div>
+	<main class="container my-4">
+		<div class="pizza-hero">
+			<div class="pizza-hero-icon">🍕</div>
+			<h1 class="pizza-title">Pizza Sizing Tool</h1>
+			<p class="pizza-subtitle">Never order too few (or too many) pizzas again</p>
 		</div>
 
-		<div id="result" class="alert alert-info d-none"></div>
+		<div class="pizza-calculator-card">
+			<form id="pizzaForm">
+				<div class="slider-group">
+					<div class="slider-header">
+						<label for="numGuests" class="slider-label">Number of Guests</label>
+						<span class="slider-value" id="numGuestsValue">1</span>
+					</div>
+					<input type="range" class="form-range" id="numGuests" min="1" max="50" value="1" />
+				</div>
+
+				<div class="slider-group">
+					<div class="slider-header">
+						<label for="slicesPerPerson" class="slider-label">Slices Per Person</label>
+						<span class="slider-value" id="slicesPerPersonValue">1</span>
+					</div>
+					<input type="range" class="form-range" id="slicesPerPerson" min="1" max="10" value="1" />
+				</div>
+
+				<div class="slider-group">
+					<div class="slider-header">
+						<label for="slicesPerPizza" class="slider-label">Slices Per Pizza</label>
+						<span class="slider-value" id="slicesPerPizzaValue">8</span>
+					</div>
+					<input type="range" class="form-range" id="slicesPerPizza" min="1" max="12" value="8" />
+				</div>
+			</form>
+
+			<div class="pizza-result" id="result">
+				<div class="result-number" id="resultNumber">1</div>
+				<div class="result-label">pizzas needed</div>
+			</div>
+
+			<div class="pizza-visual">
+				<div class="visual-section">
+					<div class="visual-label">Guests</div>
+					<div class="visual-icons" id="guestsContainer"></div>
+				</div>
+				<div class="visual-section">
+					<div class="visual-label">Pizzas</div>
+					<div class="visual-icons" id="pizzasContainer"></div>
+				</div>
+			</div>
+		</div>
 	</main>
 
 	<script src="./pizzaApp.js" defer></script>

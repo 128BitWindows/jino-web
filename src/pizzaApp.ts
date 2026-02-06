@@ -9,7 +9,7 @@ function getRequiredElementById<T extends HTMLElement>(id: string): T {
 const numGuestsInput = getRequiredElementById<HTMLInputElement>("numGuests");
 const slicesPerPersonInput = getRequiredElementById<HTMLInputElement>("slicesPerPerson");
 const slicesPerPizzaInput = getRequiredElementById<HTMLInputElement>("slicesPerPizza");
-const resultDiv = getRequiredElementById<HTMLDivElement>("result");
+const resultNumberSpan = getRequiredElementById<HTMLSpanElement>("resultNumber");
 const guestsContainer = getRequiredElementById<HTMLDivElement>("guestsContainer");
 const pizzasContainer = getRequiredElementById<HTMLDivElement>("pizzasContainer");
 
@@ -49,16 +49,14 @@ function calculatePizzas(): void {
 		const totalSlicesNeeded = numGuests * slicesPerPerson;
 		const pizzasNeeded = Math.ceil(totalSlicesNeeded / slicesPerPizza);
 
-		resultDiv.textContent = `For ${numGuests} guest(s) you'll need ${pizzasNeeded} pizza(s)!`;
-		resultDiv.classList.remove("d-none");
+		resultNumberSpan.textContent = String(pizzasNeeded);
 
-		renderIcons(guestsContainer, GUEST_EMOJI, numGuests);
-		renderIcons(pizzasContainer, PIZZA_EMOJI, pizzasNeeded);
+		renderIcons(guestsContainer, GUEST_EMOJI, Math.min(numGuests, 30));
+		renderIcons(pizzasContainer, PIZZA_EMOJI, Math.min(pizzasNeeded, 30));
 		return;
 	}
 
-	resultDiv.textContent = "Please provide valid numbers in all fields.";
-	resultDiv.classList.remove("d-none");
+	resultNumberSpan.textContent = "0";
 	guestsContainer.replaceChildren();
 	pizzasContainer.replaceChildren();
 }

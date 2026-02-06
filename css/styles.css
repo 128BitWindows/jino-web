@@ -178,42 +178,155 @@ footer {
    Pizza Calculator Styles (#pizza-calculator)
    ======================================== */
 #pizza-calculator {
-	color: #333;
+	background: #f8fafc;
+	min-height: 100vh;
+}
+
+#pizza-calculator .navbar {
+	padding: 0.75rem 0;
+}
+
+#pizza-calculator .navbar-brand {
+	font-weight: 600;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+#pizza-calculator .navbar-back-icon {
+	font-size: 1.1rem;
+}
+
+#pizza-calculator .pizza-hero {
+	text-align: center;
 	padding: 2rem 0;
 }
 
-#pizza-calculator .container {
-	max-width: 800px;
-	background: rgba(255, 255, 255, 0.95);
+#pizza-calculator .pizza-hero-icon {
+	font-size: 4rem;
+	margin-bottom: 0.5rem;
+}
+
+#pizza-calculator .pizza-title {
+	font-size: 2rem;
+	font-weight: 700;
+	color: #1a1a2e;
+	margin-bottom: 0.25rem;
+}
+
+#pizza-calculator .pizza-subtitle {
+	color: #64748b;
+	font-size: 1rem;
+	margin-bottom: 0;
+}
+
+#pizza-calculator .pizza-calculator-card {
+	background: #fff;
+	border-radius: 16px;
 	padding: 2rem;
-	border-radius: 15px;
-	box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+	border: 1px solid #e2e8f0;
+	max-width: 600px;
+	margin: 0 auto;
 }
 
-#pizza-calculator h1 {
-	font-size: 2.5rem;
-	margin-bottom: 1rem;
-	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+#pizza-calculator .slider-group {
+	margin-bottom: 1.5rem;
 }
 
-#pizza-calculator label {
-	font-weight: bold;
+#pizza-calculator .slider-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 0.5rem;
+}
+
+#pizza-calculator .slider-label {
+	font-weight: 500;
+	color: #374151;
+	margin-bottom: 0;
+}
+
+#pizza-calculator .slider-value {
+	background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+	color: #fff;
+	font-weight: 700;
+	padding: 0.25rem 0.75rem;
+	border-radius: 20px;
+	min-width: 40px;
+	text-align: center;
+}
+
+#pizza-calculator .form-range {
+	height: 8px;
+}
+
+#pizza-calculator .form-range::-webkit-slider-thumb {
+	background: #1a1a2e;
+}
+
+#pizza-calculator .form-range::-moz-range-thumb {
+	background: #1a1a2e;
+}
+
+#pizza-calculator .pizza-result {
+	background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+	color: #fff;
+	border-radius: 12px;
+	padding: 1.5rem;
+	text-align: center;
+	margin: 1.5rem 0;
+}
+
+#pizza-calculator .result-number {
+	font-size: 3rem;
+	font-weight: 700;
+	line-height: 1;
+}
+
+#pizza-calculator .result-label {
+	font-size: 1rem;
+	opacity: 0.8;
+	text-transform: uppercase;
+	letter-spacing: 0.1em;
+	margin-top: 0.25rem;
+}
+
+#pizza-calculator .pizza-visual {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+#pizza-calculator .visual-section {
+	text-align: center;
+}
+
+#pizza-calculator .visual-label {
+	font-size: 0.8rem;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: #64748b;
+	margin-bottom: 0.75rem;
+	font-weight: 600;
+}
+
+#pizza-calculator .visual-icons {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.25rem;
+	min-height: 40px;
 }
 
 #pizza-calculator .emoji-icon {
-	font-size: 48px;
-	transition: transform 0.3s;
+	font-size: 1.75rem;
+	transition: transform 0.2s;
 	display: inline-block;
 }
 
-#pizza-calculator .animate-icon:hover {
-	transform: scale(1.2) rotate(5deg);
-}
-
-#pizza-calculator #result {
-	font-size: 1.25rem;
-	text-align: center;
-	margin-top: 1rem;
+#pizza-calculator .emoji-icon:hover {
+	transform: scale(1.2);
 }
 
 /* ========================================

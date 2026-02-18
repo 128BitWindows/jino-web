@@ -10,6 +10,7 @@ interface DayEntry {
 	date: string;
 	actualClose: number | null;
 	noTrade: boolean;
+	dailyTargetPct?: number;
 }
 
 interface Cashflow {
@@ -63,6 +64,8 @@ const summaryEquity = getRequiredElement<HTMLParagraphElement>("summaryEquity");
 const summaryTargetEnd = getRequiredElement<HTMLParagraphElement>("summaryTargetEnd");
 const summaryTargetPct = getRequiredElement<HTMLParagraphElement>("summaryTargetPct");
 const summaryDrawdown = getRequiredElement<HTMLParagraphElement>("summaryDrawdown");
+const summaryTotalPL = getRequiredElement<HTMLParagraphElement>("summaryTotalPL");
+const summaryTotalWithdrawn = getRequiredElement<HTMLParagraphElement>("summaryTotalWithdrawn");
 
 const targetDay = getRequiredElement<HTMLParagraphElement>("targetDay");
 const targetStart = getRequiredElement<HTMLParagraphElement>("targetStart");
@@ -180,11 +183,11 @@ function buildMetrics(data: TrackerData): DayMetrics[] {
 		return [];
 	}
 
-	const dailyTarget = data.settings.dailyTargetPct / 100;
 	let runningStart = data.settings.startingCapital;
 	const metrics: DayMetrics[] = [];
 
 	data.days.forEach((entry, index) => {
+		const dailyTarget = (entry.dailyTargetPct ?? data.settings!.dailyTargetPct) / 100;
 		const targetStartValue = runningStart;
 		const targetEndValue = targetStartValue * (1 + dailyTarget);
 		const targetGainValue = targetEndValue - targetStartValue;
@@ -255,6 +258,8 @@ function renderSummary(data: TrackerData, metrics: DayMetrics[]): void {
 		summaryTargetEnd.textContent = formatCurrency(0);
 		summaryTargetPct.textContent = formatPercent(0);
 		summaryDrawdown.textContent = formatPercent(0);
+		summaryTotalPL.textContent = formatCurrency(0);
+		summaryTotalWithdrawn.textContent = formatCurrency(0);
 		return;
 	}
 
@@ -265,10 +270,18 @@ function renderSummary(data: TrackerData, metrics: DayMetrics[]): void {
 	const equityCurve = [data.settings.startingCapital, ...metrics.map((metric) => metric.equityValue)];
 	const maxDrawdown = computeMaxDrawdown(equityCurve);
 
+	const totalPL = metrics.reduce((sum, metric) => sum + (metric.tradingChange ?? 0), 0);
+	const totalWithdrawn = data.cashflows
+		.filter((flow) => flow.type === "withdrawal")
+		.reduce((sum, flow) => sum + flow.amount, 0);
+
 	summaryEquity.textContent = formatCurrency(currentEquity);
 	summaryTargetEnd.textContent = formatCurrency(targetEndValue);
 	summaryTargetPct.textContent = formatPercent(data.settings.dailyTargetPct, 2);
 	summaryDrawdown.textContent = formatPercent(maxDrawdown, 2);
+	summaryTotalPL.textContent = formatCurrency(totalPL);
+	summaryTotalPL.style.color = totalPL >= 0 ? "#047857" : "#dc2626";
+	summaryTotalWithdrawn.textContent = formatCurrency(totalWithdrawn);
 }
 
 function renderTargetPanel(data: TrackerData, metrics: DayMetrics[]): void {
@@ -427,7 +440,15 @@ function renderDays(data: TrackerData, metrics: DayMetrics[]): void {
 	deleteButton.className = "btn btn-outline-danger btn-sm";
 	deleteButton.textContent = "Remove Day";
 	deleteButton.addEventListener("click", () => {
+		if (!window.confirm(`Remove Day ${currentMetric.dayIndex} (${currentMetric.entry.date})?`)) {
+			return;
+		}
 		data.days = data.days.filter((day) => day.id !== currentMetric.entry.id);
+		// Clean up orphaned cashflows for this date if no other day uses it
+		const dateStillUsed = data.days.some((day) => day.date === currentMetric.entry.date);
+		if (!dateStillUsed) {
+			data.cashflows = data.cashflows.filter((flow) => flow.date !== currentMetric.entry.date);
+		}
 		saveData(data);
 		renderAll(data);
 	});
@@ -567,6 +588,7 @@ function buildNoTradeToggle(entry: DayEntry): HTMLInputElement {
 }
 
 function renderHistory(metrics: DayMetrics[]): void {
+	const data = loadData();
 	historyBody.innerHTML = "";
 	metrics
 		.filter((metric) => {
@@ -585,6 +607,31 @@ function renderHistory(metrics: DayMetrics[]): void {
 			dateInput.value = metric.entry.date;
 			dateInput.addEventListener("change", () => updateDay(metric.entry.id, { date: dateInput.value }));
 			dateCell.appendChild(dateInput);
+
+			// Show per-day target % below date
+			if (metric.entry.dailyTargetPct !== undefined) {
+				const targetPctLabel = document.createElement("small");
+				targetPctLabel.className = "text-muted d-block";
+				targetPctLabel.textContent = `Target: ${formatPercent(metric.entry.dailyTargetPct)}`;
+				dateCell.appendChild(targetPctLabel);
+			}
+
+			// Show cashflow pills below date
+			const dayCashflows = getCashflowsForDate(data.cashflows, metric.entry.date);
+			if (dayCashflows.length > 0) {
+				const pillContainer = document.createElement("div");
+				pillContainer.className = "d-flex flex-wrap gap-1 mt-1";
+				dayCashflows.forEach((flow) => {
+					const pill = document.createElement("span");
+					pill.className = `cashflow-pill ${flow.type}`;
+					pill.textContent = `${flow.type === "deposit" ? "+" : "-"}${formatCurrency(flow.amount)}`;
+					if (flow.note) {
+						pill.title = flow.note;
+					}
+					pillContainer.appendChild(pill);
+				});
+				dateCell.appendChild(pillContainer);
+			}
 
 			const dayCell = document.createElement("td");
 			dayCell.setAttribute("data-label", "Day");
@@ -613,6 +660,16 @@ function renderHistory(metrics: DayMetrics[]): void {
 			});
 			actualCell.appendChild(actualInput);
 
+			const plCell = document.createElement("td");
+			plCell.setAttribute("data-label", "P/L");
+			if (metric.tradingChange !== null) {
+				plCell.textContent = formatCurrency(metric.tradingChange);
+				plCell.style.color = metric.tradingChange >= 0 ? "#047857" : "#dc2626";
+				plCell.style.fontWeight = "600";
+			} else {
+				plCell.textContent = "--";
+			}
+
 			const pctCell = document.createElement("td");
 			pctCell.setAttribute("data-label", "Trading %");
 			pctCell.textContent = metric.tradingPct !== null ? formatPercent(metric.tradingPct) : "--";
@@ -637,16 +694,56 @@ function renderHistory(metrics: DayMetrics[]): void {
 
 			const buttonGroup = document.createElement("div");
 			buttonGroup.className = "edit-buttons";
+
 			const cashflowButton = document.createElement("button");
 			cashflowButton.type = "button";
 			cashflowButton.className = "btn btn-outline-secondary btn-sm";
 			cashflowButton.textContent = "Cashflow";
-			cashflowButton.addEventListener("click", () => setCurrentDay(metric.entry.id));
+			cashflowButton.addEventListener("click", () => {
+				const existingForm = row.querySelector(".history-cashflow-form");
+				if (existingForm) {
+					existingForm.remove();
+					return;
+				}
+				const formRow = document.createElement("tr");
+				formRow.className = "history-cashflow-form";
+				const formCell = document.createElement("td");
+				formCell.colSpan = 10;
+				formCell.innerHTML = `
+					<div class="d-flex flex-wrap gap-2 align-items-end p-2">
+						<select class="form-select form-select-sm" style="width:auto" data-field="type">
+							<option value="deposit">Deposit</option>
+							<option value="withdrawal">Withdrawal</option>
+						</select>
+						<input class="form-control form-control-sm" style="width:120px" type="number" min="0" step="0.01" placeholder="Amount" data-field="amount" />
+						<input class="form-control form-control-sm" style="width:140px" type="text" maxlength="80" placeholder="Note" data-field="note" />
+						<button type="button" class="btn btn-primary btn-sm" data-action="save">Save</button>
+						<button type="button" class="btn btn-outline-secondary btn-sm" data-action="cancel">Cancel</button>
+					</div>
+				`;
+				formCell.querySelector('[data-action="save"]')?.addEventListener("click", () => {
+					const type = (formCell.querySelector('[data-field="type"]') as HTMLSelectElement).value as Cashflow["type"];
+					const amountValue = Number.parseFloat((formCell.querySelector('[data-field="amount"]') as HTMLInputElement).value);
+					const noteValue = (formCell.querySelector('[data-field="note"]') as HTMLInputElement).value.trim();
+					if (!Number.isFinite(amountValue) || amountValue <= 0) {
+						return;
+					}
+					addCashflow(metric.entry.date, { type, amount: amountValue, note: noteValue || undefined });
+				});
+				formCell.querySelector('[data-action="cancel"]')?.addEventListener("click", () => formRow.remove());
+				formRow.appendChild(formCell);
+				row.after(formRow);
+			});
+
 			const removeButton = document.createElement("button");
 			removeButton.type = "button";
 			removeButton.className = "btn btn-outline-danger btn-sm";
 			removeButton.textContent = "Remove";
-			removeButton.addEventListener("click", () => removeDay(metric.entry.id));
+			removeButton.addEventListener("click", () => {
+				if (window.confirm(`Remove Day ${metric.dayIndex} (${metric.entry.date})?`)) {
+					removeDay(metric.entry.id);
+				}
+			});
 			buttonGroup.appendChild(cashflowButton);
 			buttonGroup.appendChild(removeButton);
 
@@ -658,6 +755,7 @@ function renderHistory(metrics: DayMetrics[]): void {
 			row.appendChild(targetStartCell);
 			row.appendChild(targetEndCell);
 			row.appendChild(actualCell);
+			row.appendChild(plCell);
 			row.appendChild(pctCell);
 			row.appendChild(statusCell);
 			row.appendChild(editCell);
@@ -681,7 +779,15 @@ function updateDay(id: string, update: Partial<DayEntry>): void {
 
 function removeDay(id: string): void {
 	const data = loadData();
+	const removedDay = data.days.find((day) => day.id === id);
 	data.days = data.days.filter((day) => day.id !== id);
+	// Clean up orphaned cashflows
+	if (removedDay) {
+		const dateStillUsed = data.days.some((day) => day.date === removedDay.date);
+		if (!dateStillUsed) {
+			data.cashflows = data.cashflows.filter((flow) => flow.date !== removedDay.date);
+		}
+	}
 	saveData(data);
 	renderAll(data);
 }
@@ -800,6 +906,7 @@ addDayButton.addEventListener("click", () => {
 		date: getDefaultDayDate(data.days, data.settings.startDate),
 		actualClose: null,
 		noTrade: false,
+		dailyTargetPct: data.settings.dailyTargetPct,
 	};
 	data.days.push(newDay);
 	saveData(data);

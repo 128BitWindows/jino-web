@@ -54,6 +54,18 @@
 					<p class="summary-value" id="summaryDrawdown">0%</p>
 				</div>
 			</div>
+			<div class="col-6 col-md-3">
+				<div class="summary-card">
+					<p class="summary-label">Total P/L</p>
+					<p class="summary-value" id="summaryTotalPL">$0.00</p>
+				</div>
+			</div>
+			<div class="col-6 col-md-3">
+				<div class="summary-card">
+					<p class="summary-label">Total Withdrawn</p>
+					<p class="summary-value" id="summaryTotalWithdrawn">$0.00</p>
+				</div>
+			</div>
 		</section>
 
 		<section class="row g-4 mb-5">
@@ -111,6 +123,7 @@
 									<th>Target Start</th>
 									<th>Target End</th>
 									<th>Actual Close</th>
+									<th>P/L</th>
 									<th>Trading %</th>
 									<th>Status</th>
 									<th>Actions</th>
@@ -181,6 +194,7 @@
 				<div class="col-md-6">
 					<label class="form-label" for="dailyTargetPct">Daily Target %</label>
 					<input class="form-control" id="dailyTargetPct" type="number" min="0" step="0.01" placeholder="1" required />
+					<div class="form-text">Changes only affect future days.</div>
 				</div>
 				<div class="col-md-6">
 					<label class="form-label" for="startDate">Start Date (Day 1)</label>

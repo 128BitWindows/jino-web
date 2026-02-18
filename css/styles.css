@@ -629,6 +629,11 @@ footer {
 	color: #7f1d1d;
 }
 
+#trade-tracker .history-cashflow-form td {
+	background: #f8fafc;
+	padding: 0.5rem;
+}
+
 #trade-tracker .table {
 	font-size: 0.9rem;
 }

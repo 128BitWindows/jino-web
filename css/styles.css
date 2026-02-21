@@ -1,4 +1,52 @@
 /* ========================================
+   Design Tokens
+   ======================================== */
+:root {
+	/* Surface colors */
+	--color-bg-page:          #FAF8F5;
+	--color-bg-section-alt:   #F3EFE9;
+	--color-bg-card:          #FFFFFF;
+	--color-bg-tool:          #F3EFE9;
+
+	/* Border colors */
+	--color-border-light:     #E4DDD4;
+	--color-border-card:      #DDD7CE;
+
+	/* Text colors */
+	--color-text-primary:     #2C2825;
+	--color-text-secondary:   #6B6460;
+	--color-text-muted:       #9C9490;
+
+	/* Accent */
+	--color-accent:           #4A3F35;
+	--color-accent-subtle:    #EDE8E1;
+
+	/* Status colors */
+	--color-status-goal-bg:      #d1fae5;
+	--color-status-goal-text:    #065f46;
+	--color-status-green-bg:     #ecfdf5;
+	--color-status-green-text:   #047857;
+	--color-status-neutral-bg:   #fef3c7;
+	--color-status-neutral-text: #92400e;
+	--color-status-red-bg:       #fee2e2;
+	--color-status-red-text:     #991b1b;
+	--color-status-pending-bg:   #EDE8E1;
+	--color-status-pending-text: #4A3F35;
+
+	/* Typography */
+	--font-base: 'DM Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+	--line-height-base:  1.75;
+	--line-height-tight: 1.3;
+
+	/* Spacing */
+	--section-padding-y:    6rem;
+	--section-padding-y-sm: 4rem;
+
+	/* Transitions */
+	--transition-base: 0.2s ease;
+}
+
+/* ========================================
    General Styling
    ======================================== */
 html, body {
@@ -10,7 +58,13 @@ body {
 	display: flex;
 	flex-direction: column;
 	min-height: 100vh;
-	font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+	font-family: var(--font-base);
+	font-size: 1rem;
+	line-height: var(--line-height-base);
+	color: var(--color-text-primary);
+	background-color: var(--color-bg-page);
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 .content-wrapper {
@@ -22,162 +76,241 @@ footer {
 }
 
 /* ========================================
+   Shared Navbar (.site-navbar)
+   ======================================== */
+.site-navbar {
+	background-color: var(--color-bg-page);
+	border-bottom: 1px solid var(--color-border-light);
+	padding: 1.25rem 0;
+}
+
+.site-navbar .navbar-brand {
+	font-size: 0.95rem;
+	font-weight: 500;
+	letter-spacing: 0.04em;
+	color: var(--color-text-primary);
+	text-decoration: none;
+	transition: color var(--transition-base);
+}
+
+.site-navbar .navbar-brand:hover {
+	color: var(--color-accent);
+}
+
+.site-navbar .navbar-back-icon {
+	font-size: 1rem;
+	margin-right: 0.25rem;
+	opacity: 0.6;
+}
+
+.site-navbar .nav-link {
+	color: var(--color-text-secondary);
+	font-size: 0.875rem;
+	font-weight: 400;
+	letter-spacing: 0.03em;
+	padding: 0.25rem 0.5rem;
+	text-decoration: none;
+	transition: color var(--transition-base);
+}
+
+.site-navbar .nav-link:hover,
+.site-navbar .nav-link:focus {
+	color: var(--color-text-primary);
+}
+
+.site-navbar .navbar-toggler {
+	border: 1px solid var(--color-border-light);
+	border-radius: 2px;
+	padding: 0.35rem 0.6rem;
+}
+
+.site-navbar .navbar-toggler:focus {
+	box-shadow: none;
+	outline: none;
+}
+
+/* Warm gray hamburger icon (override Bootstrap's white one) */
+.site-navbar .navbar-toggler-icon {
+	background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='%236B6460' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* Shared outline button */
+.btn-outline-warm {
+	display: inline-block;
+	padding: 0.65rem 1.75rem;
+	border: 1px solid var(--color-accent);
+	color: var(--color-accent);
+	background: transparent;
+	font-family: var(--font-base);
+	font-size: 0.8rem;
+	font-weight: 500;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	text-decoration: none;
+	border-radius: 0;
+	transition: background var(--transition-base), color var(--transition-base);
+	cursor: pointer;
+}
+
+.btn-outline-warm:hover,
+.btn-outline-warm:focus {
+	background-color: var(--color-accent);
+	color: #FAF8F5;
+	text-decoration: none;
+}
+
+/* ========================================
    Home Page Styles (#home-page)
    ======================================== */
 
 /* Hero Section */
 #home-page .hero-section {
-	background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-	color: #fff;
-	padding: 6rem 0;
-	text-align: center;
-	box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+	background-color: var(--color-bg-page);
+	padding: 8rem 0 6rem;
+	text-align: left;
 }
 
 #home-page .hero-greeting {
-	font-size: 1.1rem;
-	letter-spacing: 0.15em;
+	font-size: 0.8rem;
+	font-weight: 400;
+	letter-spacing: 0.14em;
 	text-transform: uppercase;
-	opacity: 0.8;
-	margin-bottom: 0.5rem;
+	color: var(--color-text-muted);
+	margin-bottom: 1.25rem;
 }
 
 #home-page .hero-title {
-	font-size: 4rem;
-	font-weight: 700;
-	margin-bottom: 1rem;
-	letter-spacing: -0.02em;
+	font-size: clamp(3rem, 8vw, 5.5rem);
+	font-weight: 300;
+	line-height: var(--line-height-tight);
+	color: var(--color-text-primary);
+	letter-spacing: -0.03em;
+	margin-bottom: 1.5rem;
 }
 
 #home-page .hero-subtitle {
-	font-size: 1.3rem;
-	opacity: 0.9;
-	margin-bottom: 2rem;
-	letter-spacing: 0.02em;
+	font-size: 1.05rem;
+	font-weight: 400;
+	color: var(--color-text-secondary);
+	line-height: 1.7;
+	margin-bottom: 2.75rem;
+	max-width: 42ch;
 }
 
 #home-page .hero-cta {
-	border-radius: 50px;
-	padding: 0.75rem 2rem;
-	font-weight: 600;
-	transition: transform 0.2s, box-shadow 0.2s;
-}
-
-#home-page .hero-cta:hover {
-	transform: translateY(-2px);
-	box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+	border-radius: 0;
 }
 
 /* Section Titles */
 #home-page .section-title {
-	font-size: 2rem;
-	font-weight: 700;
-	text-align: center;
+	font-size: 0.75rem;
+	font-weight: 500;
+	letter-spacing: 0.16em;
+	text-transform: uppercase;
+	color: var(--color-text-muted);
+	text-align: left;
 	margin-bottom: 2.5rem;
-	color: #1a1a2e;
-	position: relative;
-	padding-bottom: 1rem;
+	padding-bottom: 0;
+	position: static;
 }
 
 #home-page .section-title::after {
-	content: "";
-	position: absolute;
-	bottom: 0;
-	left: 50%;
-	transform: translateX(-50%);
-	width: 50px;
-	height: 3px;
-	background: linear-gradient(90deg, #1a1a2e, #0f3460);
-	border-radius: 2px;
+	display: none;
 }
 
 /* About Section */
 #home-page .about-section {
-	padding: 5rem 0;
-	background: #fff;
+	padding: var(--section-padding-y) 0;
+	background: var(--color-bg-section-alt);
 }
 
 #home-page .about-content {
-	max-width: 700px;
-	margin: 0 auto;
-	text-align: center;
+	max-width: 60ch;
+	margin: 0;
+	text-align: left;
 }
 
 #home-page .about-content p {
-	font-size: 1.15rem;
-	line-height: 1.8;
-	color: #4a5568;
+	font-size: 1.05rem;
+	font-weight: 300;
+	line-height: 1.9;
+	color: var(--color-text-secondary);
 }
 
 /* Portfolio Section */
 #home-page .portfolio-section {
-	padding: 5rem 0;
-	background: #f8fafc;
+	padding: var(--section-padding-y) 0;
+	background: var(--color-bg-page);
 }
 
 #home-page .project-card {
-	background: #fff;
-	border-radius: 16px;
-	padding: 2rem;
+	background: var(--color-bg-card);
+	border-radius: 2px;
+	padding: 2rem 1.75rem;
 	height: 100%;
-	transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
-	border: 1px solid #e2e8f0;
-	border-top: 3px solid transparent;
-	text-align: center;
+	transition: box-shadow var(--transition-base), border-color var(--transition-base);
+	border: 1px solid var(--color-border-card);
+	text-align: left;
 	position: relative;
 }
 
 #home-page .project-card:hover {
-	transform: translateY(-8px);
-	box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-	border-top-color: #0f3460;
+	box-shadow: 0 4px 24px rgba(44, 40, 37, 0.08);
+	border-color: var(--color-accent);
 }
 
 #home-page .project-card-coming-soon {
-	opacity: 0.75;
+	opacity: 0.5;
+	pointer-events: none;
 }
 
 #home-page .coming-soon-label {
 	position: absolute;
-	top: 12px;
-	right: 12px;
-	background: linear-gradient(135deg, #1a1a2e 0%, #0f3460 100%);
-	color: #fff;
-	font-size: 0.7rem;
-	font-weight: 600;
+	top: 1rem;
+	right: 1rem;
+	background: transparent;
+	color: var(--color-text-muted);
+	border: 1px solid var(--color-border-light);
+	font-size: 0.6rem;
+	font-weight: 500;
 	text-transform: uppercase;
-	letter-spacing: 0.05em;
-	padding: 0.25rem 0.65rem;
-	border-radius: 20px;
+	letter-spacing: 0.1em;
+	padding: 0.2rem 0.55rem;
+	border-radius: 0;
 }
 
 #home-page .project-icon {
-	font-size: 3rem;
-	margin-bottom: 1rem;
+	font-size: 1.5rem;
+	margin-bottom: 1.25rem;
+	display: block;
+	opacity: 0.7;
 }
 
 #home-page .project-title {
-	font-size: 1.25rem;
-	font-weight: 600;
-	color: #1a1a2e;
-	margin-bottom: 0.75rem;
+	font-size: 1rem;
+	font-weight: 500;
+	color: var(--color-text-primary);
+	margin-bottom: 0.5rem;
+	letter-spacing: 0.01em;
 }
 
 #home-page .project-description {
-	font-size: 0.95rem;
-	color: #64748b;
+	font-size: 0.875rem;
+	color: var(--color-text-secondary);
 	margin-bottom: 0;
-	line-height: 1.6;
+	line-height: 1.65;
+	font-weight: 400;
 }
 
-/* Footer */
-#home-page .site-footer {
-	background: #1a1a2e;
-	color: #fff;
-	padding: 2.5rem 0;
+/* Footer — global, not scoped to #home-page since it's outside .content-wrapper */
+.site-footer {
+	background: var(--color-bg-section-alt);
+	color: var(--color-text-secondary);
+	padding: 2rem 0;
+	border-top: 1px solid var(--color-border-light);
 }
 
-#home-page .footer-content {
+.footer-content {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
@@ -185,33 +318,34 @@ footer {
 	gap: 1rem;
 }
 
-#home-page .footer-copy {
+.footer-copy {
 	margin: 0;
-	opacity: 0.8;
+	font-size: 0.8rem;
+	color: var(--color-text-muted);
 }
 
-#home-page .footer-links {
+.footer-links {
 	display: flex;
 	gap: 1.5rem;
 }
 
-#home-page .footer-link {
-	color: #fff;
+.footer-link {
+	color: var(--color-text-muted);
 	text-decoration: none;
-	opacity: 0.8;
-	transition: opacity 0.2s;
+	font-size: 0.8rem;
+	letter-spacing: 0.03em;
+	transition: color var(--transition-base);
 }
 
-#home-page .footer-link:hover {
-	opacity: 1;
-	color: #fff;
+.footer-link:hover {
+	color: var(--color-text-primary);
 }
 
 /* ========================================
    Pizza Calculator Styles (#pizza-calculator)
    ======================================== */
 #pizza-calculator {
-	background: #f8fafc;
+	background: var(--color-bg-tool);
 	min-height: 100vh;
 }
 
@@ -219,45 +353,37 @@ footer {
 	padding: 0.75rem 0;
 }
 
-#pizza-calculator .navbar-brand {
-	font-weight: 600;
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-}
-
-#pizza-calculator .navbar-back-icon {
-	font-size: 1.1rem;
-}
-
 #pizza-calculator .pizza-hero {
 	text-align: center;
-	padding: 2rem 0;
+	padding: 2.5rem 0 1.5rem;
 }
 
 #pizza-calculator .pizza-hero-icon {
-	font-size: 4rem;
-	margin-bottom: 0.5rem;
+	font-size: 2.5rem;
+	margin-bottom: 0.75rem;
+	opacity: 0.8;
 }
 
 #pizza-calculator .pizza-title {
-	font-size: 2rem;
-	font-weight: 700;
-	color: #1a1a2e;
-	margin-bottom: 0.25rem;
+	font-size: 1.5rem;
+	font-weight: 500;
+	color: var(--color-text-primary);
+	margin-bottom: 0.35rem;
+	letter-spacing: -0.01em;
 }
 
 #pizza-calculator .pizza-subtitle {
-	color: #64748b;
-	font-size: 1rem;
+	color: var(--color-text-secondary);
+	font-size: 0.9rem;
+	font-weight: 400;
 	margin-bottom: 0;
 }
 
 #pizza-calculator .pizza-calculator-card {
-	background: #fff;
-	border-radius: 16px;
+	background: var(--color-bg-card);
+	border-radius: 2px;
 	padding: 2rem;
-	border: 1px solid #e2e8f0;
+	border: 1px solid var(--color-border-card);
 	max-width: 600px;
 	margin: 0 auto;
 }
@@ -274,54 +400,60 @@ footer {
 }
 
 #pizza-calculator .slider-label {
-	font-weight: 500;
-	color: #374151;
+	font-weight: 400;
+	font-size: 0.9rem;
+	color: var(--color-text-primary);
 	margin-bottom: 0;
 }
 
 #pizza-calculator .slider-value {
-	background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-	color: #fff;
-	font-weight: 700;
-	padding: 0.25rem 0.75rem;
-	border-radius: 20px;
-	min-width: 40px;
+	background: var(--color-accent);
+	color: #FAF8F5;
+	font-weight: 500;
+	font-size: 0.85rem;
+	padding: 0.2rem 0.7rem;
+	border-radius: 2px;
+	min-width: 36px;
 	text-align: center;
 }
 
 #pizza-calculator .form-range {
-	height: 8px;
+	height: 6px;
+	accent-color: var(--color-accent);
 }
 
 #pizza-calculator .form-range::-webkit-slider-thumb {
-	background: #1a1a2e;
+	background: var(--color-accent);
 }
 
 #pizza-calculator .form-range::-moz-range-thumb {
-	background: #1a1a2e;
+	background: var(--color-accent);
+	border: none;
 }
 
 #pizza-calculator .pizza-result {
-	background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-	color: #fff;
-	border-radius: 12px;
-	padding: 1.5rem;
+	background: var(--color-accent);
+	color: #FAF8F5;
+	border-radius: 2px;
+	padding: 1.75rem;
 	text-align: center;
 	margin: 1.5rem 0;
 }
 
 #pizza-calculator .result-number {
 	font-size: 3rem;
-	font-weight: 700;
+	font-weight: 300;
 	line-height: 1;
+	letter-spacing: -0.02em;
 }
 
 #pizza-calculator .result-label {
-	font-size: 1rem;
-	opacity: 0.8;
+	font-size: 0.75rem;
+	opacity: 0.75;
 	text-transform: uppercase;
-	letter-spacing: 0.1em;
-	margin-top: 0.25rem;
+	letter-spacing: 0.12em;
+	margin-top: 0.5rem;
+	font-weight: 400;
 }
 
 #pizza-calculator .pizza-visual {
@@ -329,6 +461,8 @@ footer {
 	grid-template-columns: 1fr 1fr;
 	gap: 1.5rem;
 	margin-top: 1.5rem;
+	padding-top: 1.5rem;
+	border-top: 1px solid var(--color-border-light);
 }
 
 #pizza-calculator .visual-section {
@@ -336,12 +470,12 @@ footer {
 }
 
 #pizza-calculator .visual-label {
-	font-size: 0.8rem;
+	font-size: 0.7rem;
 	text-transform: uppercase;
-	letter-spacing: 0.05em;
-	color: #64748b;
+	letter-spacing: 0.1em;
+	color: var(--color-text-muted);
 	margin-bottom: 0.75rem;
-	font-weight: 600;
+	font-weight: 500;
 }
 
 #pizza-calculator .visual-icons {
@@ -353,92 +487,99 @@ footer {
 }
 
 #pizza-calculator .emoji-icon {
-	font-size: 1.75rem;
-	transition: transform 0.2s;
+	font-size: 1.5rem;
+	transition: transform 0.15s ease;
 	display: inline-block;
 }
 
 #pizza-calculator .emoji-icon:hover {
-	transform: scale(1.2);
+	transform: scale(1.15);
 }
 
 /* ========================================
    Trade Tracker Styles (#trade-tracker)
    ======================================== */
 #trade-tracker {
-	background: #f8fafc;
+	background: var(--color-bg-tool);
 }
 
 #trade-tracker .navbar {
 	padding: 0.75rem 0;
 }
 
-#trade-tracker .navbar-brand {
-	font-weight: 600;
-	display: flex;
-	align-items: center;
-	gap: 0.5rem;
-}
-
-#trade-tracker .navbar-back-icon {
-	font-size: 1.1rem;
-}
-
 #trade-tracker .tracker-hero {
 	padding: 1.5rem;
-	border-radius: 16px;
-	background: #fff;
-	border: 1px solid #e2e8f0;
+	border-radius: 2px;
+	background: var(--color-bg-card);
+	border: 1px solid var(--color-border-card);
 }
 
 #trade-tracker .tracker-title {
-	font-size: 1.75rem;
-	font-weight: 700;
+	font-size: 1.4rem;
+	font-weight: 500;
 	margin-bottom: 0.25rem;
-	color: #1a1a2e;
+	color: var(--color-text-primary);
+	letter-spacing: -0.01em;
 }
 
 #trade-tracker .tracker-subtitle {
-	color: #64748b;
+	color: var(--color-text-secondary);
 	margin-bottom: 0;
-	font-size: 0.95rem;
+	font-size: 0.875rem;
+	font-weight: 400;
 }
 
 #trade-tracker .settings-button {
-	border-radius: 8px;
+	border-radius: 2px;
 	padding: 0.5rem 1rem;
-	font-weight: 500;
+	font-weight: 400;
+	font-size: 0.875rem;
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
 }
 
 #trade-tracker .settings-icon {
-	font-size: 1rem;
+	font-size: 0.95rem;
+}
+
+/* Settings button override — warm style */
+#openSettings {
+	background: transparent;
+	border: 1px solid var(--color-border-card);
+	color: var(--color-text-primary);
+	border-radius: 2px;
+	transition: background var(--transition-base), border-color var(--transition-base), color var(--transition-base);
+}
+
+#openSettings:hover {
+	background: var(--color-accent-subtle);
+	border-color: var(--color-accent);
+	color: var(--color-accent);
 }
 
 #trade-tracker .panel {
-	background: #fff;
-	border-radius: 16px;
+	background: var(--color-bg-card);
+	border-radius: 2px;
 	padding: 1.5rem;
-	border: 1px solid #e2e8f0;
+	border: 1px solid var(--color-border-card);
 	height: 100%;
 }
 
 #trade-tracker .panel-title {
-	font-size: 1rem;
-	font-weight: 600;
+	font-size: 0.7rem;
+	font-weight: 500;
 	margin-bottom: 1rem;
-	color: #374151;
+	color: var(--color-text-muted);
 	text-transform: uppercase;
-	letter-spacing: 0.05em;
+	letter-spacing: 0.12em;
 }
 
 #trade-tracker .summary-card {
-	background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-	color: #fff;
+	background: var(--color-accent);
+	color: #FAF8F5;
 	padding: 1.25rem;
-	border-radius: 12px;
+	border-radius: 2px;
 	min-height: 100px;
 	display: flex;
 	flex-direction: column;
@@ -446,34 +587,36 @@ footer {
 }
 
 #trade-tracker .summary-label {
-	font-size: 0.75rem;
-	letter-spacing: 0.08em;
+	font-size: 0.65rem;
+	letter-spacing: 0.1em;
 	text-transform: uppercase;
 	margin-bottom: 0.35rem;
-	opacity: 0.7;
+	opacity: 0.65;
 }
 
 #trade-tracker .summary-value {
-	font-size: 1.5rem;
-	font-weight: 700;
+	font-size: 1.4rem;
+	font-weight: 400;
 	margin: 0;
+	letter-spacing: -0.01em;
 }
 
 #trade-tracker .settings-dialog {
 	border: none;
 	padding: 0;
 	width: min(720px, 95vw);
-	border-radius: 16px;
-	box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+	border-radius: 2px;
+	box-shadow: 0 20px 60px rgba(44, 40, 37, 0.15);
 }
 
 #trade-tracker .settings-dialog::backdrop {
-	background: rgba(0, 0, 0, 0.5);
+	background: rgba(44, 40, 37, 0.4);
 }
 
 #trade-tracker .startup-icon {
-	font-size: 3rem;
+	font-size: 2.5rem;
 	margin-bottom: 0.5rem;
+	opacity: 0.8;
 }
 
 #trade-tracker .settings-panel {
@@ -481,14 +624,15 @@ footer {
 }
 
 #trade-tracker .current-day-card {
-	border: 1px solid #e2e8f0;
-	border-radius: 12px;
+	border: 1px solid var(--color-border-light);
+	border-radius: 2px;
 	padding: 1rem;
-	background: #f8fafc;
+	background: var(--color-bg-section-alt);
 }
 
 #trade-tracker .current-day-card .form-label {
-	font-size: 0.9rem;
+	font-size: 0.85rem;
+	color: var(--color-text-secondary);
 }
 
 #trade-tracker .target-grid {
@@ -499,17 +643,17 @@ footer {
 
 #trade-tracker .target-label {
 	margin-bottom: 0.25rem;
-	color: #64748b;
-	font-size: 0.8rem;
+	color: var(--color-text-muted);
+	font-size: 0.7rem;
 	text-transform: uppercase;
-	letter-spacing: 0.05em;
+	letter-spacing: 0.08em;
 }
 
 #trade-tracker .target-value {
-	font-weight: 700;
-	font-size: 1.1rem;
+	font-weight: 500;
+	font-size: 1rem;
 	margin-bottom: 0;
-	color: #1a1a2e;
+	color: var(--color-text-primary);
 }
 
 #trade-tracker .v-stack {
@@ -519,10 +663,10 @@ footer {
 }
 
 #trade-tracker .day-card {
-	border: 1px solid #e2e8f0;
-	border-radius: 12px;
+	border: 1px solid var(--color-border-light);
+	border-radius: 2px;
 	padding: 1rem;
-	background: #f8fafc;
+	background: var(--color-bg-section-alt);
 }
 
 #trade-tracker .day-header {
@@ -534,39 +678,39 @@ footer {
 }
 
 #trade-tracker .status-badge {
-	padding: 0.35rem 0.75rem;
-	border-radius: 6px;
-	font-size: 0.75rem;
-	font-weight: 600;
+	padding: 0.3rem 0.65rem;
+	border-radius: 2px;
+	font-size: 0.7rem;
+	font-weight: 500;
 	text-transform: uppercase;
-	letter-spacing: 0.03em;
+	letter-spacing: 0.05em;
 	white-space: nowrap;
 	display: inline-block;
 }
 
 #trade-tracker .status-goal {
-	background: #d1fae5;
-	color: #065f46;
+	background: var(--color-status-goal-bg);
+	color: var(--color-status-goal-text);
 }
 
 #trade-tracker .status-green {
-	background: #ecfdf5;
-	color: #047857;
+	background: var(--color-status-green-bg);
+	color: var(--color-status-green-text);
 }
 
 #trade-tracker .status-neutral {
-	background: #fef3c7;
-	color: #92400e;
+	background: var(--color-status-neutral-bg);
+	color: var(--color-status-neutral-text);
 }
 
 #trade-tracker .status-red {
-	background: #fee2e2;
-	color: #991b1b;
+	background: var(--color-status-red-bg);
+	color: var(--color-status-red-text);
 }
 
 #trade-tracker .status-pending {
-	background: #e2e8f0;
-	color: #475569;
+	background: var(--color-status-pending-bg);
+	color: var(--color-status-pending-text);
 }
 
 #trade-tracker .metric {
@@ -574,8 +718,8 @@ footer {
 	justify-content: space-between;
 	align-items: center;
 	padding: 0.65rem 0;
-	border-bottom: 1px solid #e2e8f0;
-	font-size: 0.95rem;
+	border-bottom: 1px solid var(--color-border-light);
+	font-size: 0.9rem;
 }
 
 #trade-tracker .metric:last-child {
@@ -583,11 +727,11 @@ footer {
 }
 
 #trade-tracker .metric span {
-	color: #64748b;
+	color: var(--color-text-secondary);
 }
 
 #trade-tracker .metric strong {
-	color: #1a1a2e;
+	color: var(--color-text-primary);
 }
 
 #trade-tracker .filter-buttons-wrapper {
@@ -597,26 +741,35 @@ footer {
 }
 
 #trade-tracker .filter-button {
-	border-radius: 6px;
-	font-size: 0.85rem;
-	padding: 0.4rem 0.75rem;
+	border-radius: 2px;
+	font-size: 0.8rem;
+	padding: 0.35rem 0.75rem;
+	border-color: var(--color-border-card);
+	color: var(--color-text-secondary);
+	transition: background var(--transition-base), color var(--transition-base), border-color var(--transition-base);
+}
+
+#trade-tracker .filter-button:hover {
+	border-color: var(--color-accent);
+	color: var(--color-accent);
+	background: transparent;
 }
 
 #trade-tracker .filter-button.active {
-	background: #1a1a2e;
-	color: #fff;
-	border-color: #1a1a2e;
+	background: var(--color-accent);
+	color: #FAF8F5;
+	border-color: var(--color-accent);
 }
 
 #trade-tracker .cashflow-pill {
 	display: inline-flex;
 	align-items: center;
 	gap: 0.35rem;
-	padding: 0.35rem 0.6rem;
-	border-radius: 6px;
-	font-size: 0.8rem;
-	background: #e2e8f0;
-	color: #1f2937;
+	padding: 0.3rem 0.6rem;
+	border-radius: 2px;
+	font-size: 0.75rem;
+	background: var(--color-accent-subtle);
+	color: var(--color-text-secondary);
 }
 
 #trade-tracker .cashflow-pill.deposit {
@@ -630,25 +783,27 @@ footer {
 }
 
 #trade-tracker .history-cashflow-form td {
-	background: #f8fafc;
+	background: var(--color-bg-section-alt);
 	padding: 0.5rem;
 }
 
 #trade-tracker .table {
-	font-size: 0.9rem;
+	font-size: 0.875rem;
 }
 
 #trade-tracker .table th {
-	font-weight: 600;
-	color: #64748b;
+	font-weight: 500;
+	color: var(--color-text-muted);
 	text-transform: uppercase;
-	font-size: 0.75rem;
-	letter-spacing: 0.05em;
+	font-size: 0.65rem;
+	letter-spacing: 0.08em;
 	border-bottom-width: 1px;
+	border-color: var(--color-border-light);
 }
 
 #trade-tracker .table td {
 	vertical-align: middle;
+	border-color: var(--color-border-light);
 }
 
 #trade-tracker .edit-cell {
@@ -662,8 +817,8 @@ footer {
 	display: flex;
 	align-items: center;
 	gap: 0.35rem;
-	font-size: 0.85rem;
-	color: #64748b;
+	font-size: 0.82rem;
+	color: var(--color-text-secondary);
 	cursor: pointer;
 	white-space: nowrap;
 }
@@ -673,16 +828,59 @@ footer {
 	gap: 0.5rem;
 }
 
+/* Form controls — warm override */
+#trade-tracker .form-control,
+#trade-tracker .form-select {
+	border-color: var(--color-border-card);
+	border-radius: 2px;
+	color: var(--color-text-primary);
+	background-color: var(--color-bg-card);
+}
+
+#trade-tracker .form-control:focus,
+#trade-tracker .form-select:focus {
+	border-color: var(--color-accent);
+	box-shadow: 0 0 0 2px rgba(74, 63, 53, 0.1);
+}
+
+/* Primary button in dialogs — warm accent */
+#trade-tracker .btn-primary,
+#startupForm .btn-primary,
+#setupForm .btn-primary {
+	background: var(--color-accent);
+	border-color: var(--color-accent);
+	border-radius: 2px;
+	font-size: 0.875rem;
+	font-weight: 400;
+	letter-spacing: 0.02em;
+}
+
+#trade-tracker .btn-primary:hover,
+#startupForm .btn-primary:hover,
+#setupForm .btn-primary:hover {
+	background: #2C2825;
+	border-color: #2C2825;
+}
+
+/* Add trading day button */
+#addDay {
+	border-color: var(--color-accent);
+	color: var(--color-accent);
+	border-radius: 2px;
+	font-size: 0.85rem;
+}
+
+#addDay:hover {
+	background: var(--color-accent);
+	color: #FAF8F5;
+}
+
 /* ========================================
    Responsive: Tablet (max-width: 991.98px)
    ======================================== */
 @media (max-width: 991.98px) {
 	#home-page .hero-section {
-		padding: 5rem 0;
-	}
-
-	#home-page .hero-title {
-		font-size: 3.25rem;
+		padding: 6rem 0 4rem;
 	}
 }
 
@@ -692,25 +890,25 @@ footer {
 @media (max-width: 767.98px) {
 	/* --- Home Page --- */
 	#home-page .hero-title {
-		font-size: 2.5rem;
-	}
-
-	#home-page .hero-subtitle {
-		font-size: 1.1rem;
+		font-size: 2.75rem;
 	}
 
 	#home-page .hero-section {
-		padding: 4rem 0;
+		padding: 5rem 0 3.5rem;
 	}
 
 	#home-page .about-section,
 	#home-page .portfolio-section {
-		padding: 3.5rem 0;
+		padding: var(--section-padding-y-sm) 0;
 	}
 
-	#home-page .footer-content {
+	.footer-content {
 		flex-direction: column;
 		text-align: center;
+	}
+
+	.footer-links {
+		justify-content: center;
 	}
 
 	/* --- Trade Tracker --- */
@@ -737,7 +935,7 @@ footer {
 	}
 
 	#trade-tracker .summary-value {
-		font-size: 1.25rem;
+		font-size: 1.15rem;
 	}
 
 	/* Filter buttons: horizontal scroll on mobile */
@@ -750,8 +948,8 @@ footer {
 
 	#trade-tracker .filter-button {
 		flex-shrink: 0;
-		font-size: 0.8rem;
-		padding: 0.35rem 0.65rem;
+		font-size: 0.75rem;
+		padding: 0.3rem 0.6rem;
 	}
 
 	/* History table → card layout */
@@ -769,16 +967,16 @@ footer {
 
 	#trade-tracker .table tbody tr {
 		display: block;
-		background: #fff;
-		border: 1px solid #e2e8f0;
-		border-radius: 12px;
+		background: var(--color-bg-card);
+		border: 1px solid var(--color-border-light);
+		border-radius: 2px;
 		padding: 0.75rem;
 		margin-bottom: 0.75rem;
 	}
 
 	#trade-tracker .table tbody tr:nth-of-type(odd),
 	#trade-tracker .table tbody tr:nth-of-type(even) {
-		background: #fff;
+		background: var(--color-bg-card);
 	}
 
 	#trade-tracker .table td {
@@ -787,8 +985,8 @@ footer {
 		align-items: center;
 		padding: 0.5rem 0.25rem;
 		border: none;
-		border-bottom: 1px solid #f1f5f9;
-		font-size: 0.85rem;
+		border-bottom: 1px solid var(--color-bg-section-alt);
+		font-size: 0.82rem;
 	}
 
 	#trade-tracker .table td:last-child {
@@ -797,11 +995,11 @@ footer {
 
 	#trade-tracker .table td::before {
 		content: attr(data-label);
-		font-weight: 600;
-		color: #64748b;
-		font-size: 0.75rem;
+		font-weight: 500;
+		color: var(--color-text-muted);
+		font-size: 0.65rem;
 		text-transform: uppercase;
-		letter-spacing: 0.04em;
+		letter-spacing: 0.06em;
 		flex-shrink: 0;
 		margin-right: 1rem;
 	}
@@ -816,7 +1014,7 @@ footer {
 
 	#trade-tracker .table td .form-control-sm {
 		min-height: 44px;
-		font-size: 0.9rem;
+		font-size: 0.875rem;
 	}
 
 	#trade-tracker .table td .btn-sm {
@@ -839,15 +1037,11 @@ footer {
    ======================================== */
 @media (max-width: 575.98px) {
 	#home-page .hero-title {
-		font-size: 2rem;
-	}
-
-	#home-page .hero-subtitle {
-		font-size: 1rem;
+		font-size: 2.25rem;
 	}
 
 	#home-page .hero-section {
-		padding: 3rem 0;
+		padding: 4rem 0 2.5rem;
 	}
 
 	#home-page .about-section,
@@ -856,31 +1050,27 @@ footer {
 	}
 
 	#home-page .project-card {
-		padding: 1.5rem;
+		padding: 1.5rem 1.25rem;
 	}
 
-	#home-page .site-footer {
-		padding: 2rem 0;
-	}
-
-	#home-page .footer-links {
-		justify-content: center;
+	.site-footer {
+		padding: 1.5rem 0;
 	}
 
 	/* Trade tracker small phone */
 	#trade-tracker .tracker-title {
-		font-size: 1.4rem;
+		font-size: 1.25rem;
 	}
 
 	#trade-tracker .tracker-subtitle {
-		font-size: 0.85rem;
+		font-size: 0.82rem;
 	}
 
 	#trade-tracker .summary-value {
-		font-size: 1.1rem;
+		font-size: 1rem;
 	}
 
 	#trade-tracker .summary-label {
-		font-size: 0.65rem;
+		font-size: 0.6rem;
 	}
 }

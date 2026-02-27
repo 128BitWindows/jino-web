@@ -30,6 +30,19 @@
 					<span class="settings-icon">⚙</span> Settings
 				</button>
 			</div>
+			<div id="goalProgressWrap" class="d-none mt-3">
+				<div class="d-flex justify-content-between align-items-center mb-1">
+					<span class="goal-progress-label">Progress to Goal</span>
+					<span class="goal-progress-pct" id="goalProgressPct">0%</span>
+				</div>
+				<div class="goal-progress-track">
+					<div class="goal-progress-fill" id="goalProgressBar" style="width:0%"></div>
+				</div>
+				<div class="d-flex justify-content-between mt-1">
+					<span class="goal-progress-ends" id="goalProgressStart"></span>
+					<span class="goal-progress-ends" id="goalProgressEnd"></span>
+				</div>
+			</div>
 		</section>
 
 		<section class="row g-4 mb-5">
@@ -140,18 +153,59 @@
 			</div>
 		</section>
 
-		<!-- Hidden metrics for JS compatibility -->
-		<div class="d-none">
-			<span id="metricWinRate"></span>
-			<span id="metricAvgGreen"></span>
-			<span id="metricAvgRed"></span>
-			<span id="metricProfitFactor"></span>
-			<span id="metricGoalStreak"></span>
-			<span id="metricGreenStreak"></span>
-		</div>
+		<section class="row g-4 mb-4">
+			<div class="col-12">
+				<div class="panel">
+					<h2 class="panel-title">Performance</h2>
+					<div class="stats-grid">
+						<div class="stat-item">
+							<p class="stat-label">Win Rate</p>
+							<p class="stat-value" id="metricWinRate">–</p>
+						</div>
+						<div class="stat-item">
+							<p class="stat-label">Avg Green Day</p>
+							<p class="stat-value" id="metricAvgGreen">–</p>
+						</div>
+						<div class="stat-item">
+							<p class="stat-label">Avg Red Day</p>
+							<p class="stat-value" id="metricAvgRed">–</p>
+						</div>
+						<div class="stat-item">
+							<p class="stat-label">Profit Factor</p>
+							<p class="stat-value" id="metricProfitFactor">–</p>
+						</div>
+						<div class="stat-item">
+							<p class="stat-label">Goal Streak</p>
+							<p class="stat-value" id="metricGoalStreak">–</p>
+						</div>
+						<div class="stat-item">
+							<p class="stat-label">Green Streak</p>
+							<p class="stat-value" id="metricGreenStreak">–</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</section>
 	</main>
 
 	<script src="./tradeTracker.js" defer></script>
+
+	<dialog id="notesDialog" class="settings-dialog">
+		<div class="panel settings-panel">
+			<div class="d-flex justify-content-between align-items-start mb-3">
+				<div>
+					<h2 class="panel-title mb-2" id="notesDialogTitle">Day 1 — Notes</h2>
+					<span id="notesDialogBadge" class="status-badge status-pending">Pending</span>
+				</div>
+				<button type="button" id="closeNotes" class="btn btn-outline-secondary btn-sm">✕</button>
+			</div>
+			<textarea id="notesDialogTextarea" class="form-control" rows="8" placeholder="What went well today? What could have been better? What will you do differently?"></textarea>
+			<div class="d-flex justify-content-end gap-2 mt-3">
+				<button type="button" id="cancelNotes" class="btn btn-outline-secondary">Cancel</button>
+				<button type="button" id="saveNotes" class="btn btn-primary">Save Note</button>
+			</div>
+		</div>
+	</dialog>
 
 	<dialog id="startupDialog" class="settings-dialog">
 		<form id="startupForm" class="panel settings-panel">

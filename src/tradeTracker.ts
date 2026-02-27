@@ -86,9 +86,18 @@ const metricGreenStreak = getRequiredElement<HTMLSpanElement>("metricGreenStreak
 const exportButton = getRequiredElement<HTMLButtonElement>("exportData");
 const importInput = getRequiredElement<HTMLInputElement>("importData");
 
+const notesDialog = getRequiredElement<HTMLDialogElement>("notesDialog");
+const notesDialogTitle = getRequiredElement<HTMLHeadingElement>("notesDialogTitle");
+const notesDialogBadge = getRequiredElement<HTMLSpanElement>("notesDialogBadge");
+const notesDialogTextarea = getRequiredElement<HTMLTextAreaElement>("notesDialogTextarea");
+const saveNotesButton = getRequiredElement<HTMLButtonElement>("saveNotes");
+const cancelNotesButton = getRequiredElement<HTMLButtonElement>("cancelNotes");
+const closeNotesButton = getRequiredElement<HTMLButtonElement>("closeNotes");
+
 const filterButtons = Array.from(document.querySelectorAll<HTMLButtonElement>(".filter-button"));
 
 let activeFilter: "all" | "goal" | "green" | "neutral" | "red" = "all";
+let notesActiveEntryId: string | null = null;
 
 function getRequiredElement<T extends Element>(id: string): T {
 	const element = document.getElementById(id);
@@ -283,6 +292,27 @@ function renderSummary(data: TrackerData, metrics: DayMetrics[]): void {
 	summaryTotalPL.textContent = formatCurrency(totalPL);
 	summaryTotalPL.style.color = totalPL >= 0 ? "#047857" : "#dc2626";
 	summaryTotalWithdrawn.textContent = formatCurrency(totalWithdrawn);
+
+	// Goal progress bar
+	const goalProgressWrap = document.getElementById("goalProgressWrap");
+	const goalProgressBarEl = document.getElementById("goalProgressBar");
+	const goalProgressPctEl = document.getElementById("goalProgressPct");
+	const goalProgressStartEl = document.getElementById("goalProgressStart");
+	const goalProgressEndEl = document.getElementById("goalProgressEnd");
+	if (goalProgressWrap && goalProgressBarEl && goalProgressPctEl && goalProgressStartEl && goalProgressEndEl) {
+		const startCap = data.settings.startingCapital;
+		const goalCap = data.settings.targetGoal;
+		if (goalCap > startCap) {
+			goalProgressWrap.classList.remove("d-none");
+			const pct = Math.min(100, Math.max(0, ((currentEquity - startCap) / (goalCap - startCap)) * 100));
+			goalProgressBarEl.style.width = `${pct.toFixed(1)}%`;
+			goalProgressPctEl.textContent = `${pct.toFixed(1)}%`;
+			goalProgressStartEl.textContent = formatCurrency(startCap);
+			goalProgressEndEl.textContent = formatCurrency(goalCap);
+		} else {
+			goalProgressWrap.classList.add("d-none");
+		}
+	}
 }
 
 function renderTargetPanel(data: TrackerData, metrics: DayMetrics[]): void {
@@ -337,6 +367,7 @@ function renderDays(data: TrackerData, metrics: DayMetrics[]): void {
 	body.className = "row g-3";
 	body.appendChild(buildInputGroup("Date", buildDateInput(currentMetric.entry)));
 	body.appendChild(buildInputGroup("Actual Close", buildActualInput(currentMetric.entry, currentMetric.netCashflow, currentMetric.targetStart, currentMetric.entry.noTrade)));
+	body.appendChild(buildInputGroup("Target % Override", buildTargetPctInput(currentMetric.entry, data.settings!.dailyTargetPct)));
 	body.appendChild(buildToggleGroup("No Trade Today", buildNoTradeToggle(currentMetric.entry)));
 
 	const stats = document.createElement("div");
@@ -426,12 +457,17 @@ function renderDays(data: TrackerData, metrics: DayMetrics[]): void {
 	getCashflowsForDate(data.cashflows, currentMetric.entry.date).forEach((flow) => {
 		const pill = document.createElement("span");
 		pill.className = `cashflow-pill ${flow.type}`;
-		pill.textContent = `${flow.type === "deposit" ? "+" : "-"}${formatCurrency(flow.amount)} ${flow.note ?? ""}`.trim();
+		const text = flow.type === "deposit" ? "+" : "-";
+		pill.appendChild(document.createTextNode(`${text}${formatCurrency(flow.amount)}${flow.note ? ` ${flow.note}` : ""}`));
 		const remove = document.createElement("button");
 		remove.type = "button";
-		remove.className = "btn btn-link btn-sm p-0 ms-1";
+		remove.className = "cashflow-remove";
 		remove.textContent = "×";
-		remove.addEventListener("click", () => removeCashflow(flow.id));
+		remove.setAttribute("aria-label", "Remove cashflow");
+		remove.addEventListener("click", (e) => {
+			e.stopPropagation();
+			removeCashflow(flow.id);
+		});
 		pill.appendChild(remove);
 		cashflowList.appendChild(pill);
 	});
@@ -571,6 +607,27 @@ function buildActualInput(entry: DayEntry, netCashflow: number, targetStartValue
 	return input;
 }
 
+function buildTargetPctInput(entry: DayEntry, defaultPct: number): HTMLInputElement {
+	const input = document.createElement("input");
+	input.type = "number";
+	input.className = "form-control";
+	input.min = "0";
+	input.step = "0.01";
+	input.placeholder = `Default: ${defaultPct}%`;
+	input.value = entry.dailyTargetPct !== undefined ? String(entry.dailyTargetPct) : "";
+	input.addEventListener("change", () => {
+		const value = Number.parseFloat(input.value);
+		const data = loadData();
+		const day = data.days.find((item) => item.id === entry.id);
+		if (day) {
+			day.dailyTargetPct = Number.isFinite(value) && value >= 0 ? value : undefined;
+			saveData(data);
+			renderAll(data);
+		}
+	});
+	return input;
+}
+
 function buildNoTradeToggle(entry: DayEntry): HTMLInputElement {
 	const input = document.createElement("input");
 	input.type = "checkbox";
@@ -618,7 +675,7 @@ function renderHistory(metrics: DayMetrics[]): void {
 				dateCell.appendChild(targetPctLabel);
 			}
 
-			// Show cashflow pills below date
+			// Show cashflow pills below date (with × remove buttons)
 			const dayCashflows = getCashflowsForDate(data.cashflows, metric.entry.date);
 			if (dayCashflows.length > 0) {
 				const pillContainer = document.createElement("div");
@@ -626,10 +683,18 @@ function renderHistory(metrics: DayMetrics[]): void {
 				dayCashflows.forEach((flow) => {
 					const pill = document.createElement("span");
 					pill.className = `cashflow-pill ${flow.type}`;
-					pill.textContent = `${flow.type === "deposit" ? "+" : "-"}${formatCurrency(flow.amount)}`;
-					if (flow.note) {
-						pill.title = flow.note;
-					}
+					const prefix = flow.type === "deposit" ? "+" : "-";
+					pill.appendChild(document.createTextNode(`${prefix}${formatCurrency(flow.amount)}${flow.note ? ` ${flow.note}` : ""}`));
+					const removePill = document.createElement("button");
+					removePill.type = "button";
+					removePill.className = "cashflow-remove";
+					removePill.textContent = "×";
+					removePill.setAttribute("aria-label", "Remove cashflow");
+					removePill.addEventListener("click", (e) => {
+						e.stopPropagation();
+						removeCashflow(flow.id);
+					});
+					pill.appendChild(removePill);
 					pillContainer.appendChild(pill);
 				});
 				dateCell.appendChild(pillContainer);
@@ -682,18 +747,20 @@ function renderHistory(metrics: DayMetrics[]): void {
 
 			const notesCell = document.createElement("td");
 			notesCell.setAttribute("data-label", "Notes");
-			const notesTextarea = document.createElement("textarea");
-			notesTextarea.className = "form-control form-control-sm";
-			notesTextarea.rows = 2;
-			notesTextarea.style.minWidth = "160px";
-			notesTextarea.style.resize = "vertical";
-			notesTextarea.placeholder = "What went well or wrong?";
-			notesTextarea.value = metric.entry.notes ?? "";
-			notesTextarea.addEventListener("blur", () => {
-				const trimmed = notesTextarea.value.trim();
-				updateDay(metric.entry.id, { notes: trimmed || undefined });
-			});
-			notesCell.appendChild(notesTextarea);
+			const notePreview = document.createElement("button");
+			notePreview.type = "button";
+			if (metric.entry.notes) {
+				const preview = metric.entry.notes.length > 100
+					? metric.entry.notes.slice(0, 100) + "…"
+					: metric.entry.notes;
+				notePreview.className = "note-preview has-note";
+				notePreview.textContent = preview;
+			} else {
+				notePreview.className = "note-preview no-note";
+				notePreview.textContent = "Add note";
+			}
+			notePreview.addEventListener("click", () => openNotesModal(metric));
+			notesCell.appendChild(notePreview);
 
 			const editCell = document.createElement("td");
 			editCell.setAttribute("data-label", "Actions");
@@ -882,6 +949,16 @@ function renderMetrics(metrics: DayMetrics[]): void {
 	metricGreenStreak.textContent = greenStreak.toString();
 }
 
+function openNotesModal(metric: DayMetrics): void {
+	notesActiveEntryId = metric.entry.id;
+	notesDialogTitle.textContent = `Day ${metric.dayIndex} — ${metric.entry.date}`;
+	notesDialogBadge.className = `status-badge ${getStatusClass(metric.status)}`;
+	notesDialogBadge.textContent = getStatusLabel(metric.status, metric.entry);
+	notesDialogTextarea.value = metric.entry.notes ?? "";
+	notesDialog.showModal();
+	setTimeout(() => notesDialogTextarea.focus(), 50);
+}
+
 function renderAll(data: TrackerData): void {
 	const metrics = buildMetrics(data);
 	renderSummary(data, metrics);
@@ -980,6 +1057,18 @@ filterButtons.forEach((button) => {
 		renderAll(loadData());
 	});
 });
+
+saveNotesButton.addEventListener("click", () => {
+	if (!notesActiveEntryId) {
+		return;
+	}
+	const trimmed = notesDialogTextarea.value.trim();
+	updateDay(notesActiveEntryId, { notes: trimmed || undefined });
+	notesDialog.close();
+});
+
+cancelNotesButton.addEventListener("click", () => notesDialog.close());
+closeNotesButton.addEventListener("click", () => notesDialog.close());
 
 // Prevent escape key from closing startup dialog
 startupDialog.addEventListener("cancel", (event) => {

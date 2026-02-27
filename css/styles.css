@@ -783,6 +783,126 @@ footer {
 	color: #7f1d1d;
 }
 
+#trade-tracker .cashflow-remove {
+	background: none;
+	border: none;
+	padding: 0 0.2rem;
+	margin-left: 0.1rem;
+	cursor: pointer;
+	font-size: 1rem;
+	line-height: 1;
+	color: inherit;
+	opacity: 0.45;
+	transition: opacity var(--transition-base);
+	vertical-align: middle;
+}
+
+#trade-tracker .cashflow-remove:hover {
+	opacity: 1;
+}
+
+/* Performance stats grid */
+#trade-tracker .stats-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+	gap: 1rem;
+}
+
+#trade-tracker .stat-item {
+	padding: 0.875rem;
+	background: var(--color-bg-section-alt);
+	border-radius: 2px;
+}
+
+#trade-tracker .stat-label {
+	margin-bottom: 0.25rem;
+	color: var(--color-text-muted);
+	font-size: 0.65rem;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+}
+
+#trade-tracker .stat-value {
+	font-weight: 500;
+	font-size: 1.1rem;
+	margin-bottom: 0;
+	color: var(--color-text-primary);
+}
+
+/* Goal progress bar */
+#trade-tracker .goal-progress-label {
+	font-size: 0.7rem;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	color: var(--color-text-muted);
+}
+
+#trade-tracker .goal-progress-pct {
+	font-size: 0.8rem;
+	font-weight: 500;
+	color: var(--color-text-primary);
+}
+
+#trade-tracker .goal-progress-track {
+	background-color: var(--color-border-light);
+	border-radius: 1px;
+	height: 5px;
+	overflow: hidden;
+}
+
+#trade-tracker .goal-progress-fill {
+	background-color: var(--color-accent);
+	height: 100%;
+	transition: width 0.4s ease;
+}
+
+#trade-tracker .goal-progress-ends {
+	font-size: 0.7rem;
+	color: var(--color-text-muted);
+}
+
+/* Notes preview chip in history table */
+#trade-tracker .note-preview {
+	background: none;
+	border: 1px solid transparent;
+	padding: 0.35rem 0.5rem;
+	border-radius: 2px;
+	cursor: pointer;
+	text-align: left;
+	width: 100%;
+	min-width: 160px;
+	max-width: 220px;
+	font-family: var(--font-base);
+	font-size: 0.82rem;
+	line-height: 1.5;
+	transition: background var(--transition-base), border-color var(--transition-base);
+	display: block;
+}
+
+#trade-tracker .note-preview:hover {
+	background: var(--color-accent-subtle);
+	border-color: var(--color-border-card);
+}
+
+#trade-tracker .note-preview.has-note {
+	color: var(--color-text-secondary);
+	overflow: hidden;
+	display: -webkit-box;
+	-webkit-line-clamp: 3;
+	-webkit-box-orient: vertical;
+}
+
+#trade-tracker .note-preview.no-note {
+	color: var(--color-text-muted);
+	font-size: 0.78rem;
+	letter-spacing: 0.02em;
+}
+
+/* Notes dialog — narrower than settings */
+#notesDialog {
+	width: min(540px, 95vw);
+}
+
 #trade-tracker .history-cashflow-form td {
 	background: var(--color-bg-section-alt);
 	padding: 0.5rem;

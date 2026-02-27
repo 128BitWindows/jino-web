@@ -501,6 +501,8 @@ footer {
 }
 
 #trade-tracker .navbar {
+	background-color: var(--color-accent) !important;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 	padding: 0.75rem 0;
 }
 
@@ -570,6 +572,8 @@ footer {
 	color: var(--color-text-muted);
 	text-transform: uppercase;
 	letter-spacing: 0.12em;
+	border-left: 2px solid var(--color-accent);
+	padding-left: 0.625rem;
 }
 
 #trade-tracker .summary-card {
@@ -746,7 +750,7 @@ footer {
 	transition: background var(--transition-base), color var(--transition-base), border-color var(--transition-base);
 }
 
-#trade-tracker .filter-button:hover {
+#trade-tracker .filter-button:hover:not(.active) {
 	border-color: var(--color-accent);
 	color: var(--color-accent);
 	background: transparent;
@@ -784,23 +788,40 @@ footer {
 	padding: 0.5rem;
 }
 
-#trade-tracker .table {
+#trade-tracker .table-tracker {
 	font-size: 0.875rem;
 }
 
-#trade-tracker .table th {
+#trade-tracker .table-tracker thead th {
 	font-weight: 500;
 	color: var(--color-text-muted);
 	text-transform: uppercase;
 	font-size: 0.65rem;
 	letter-spacing: 0.08em;
-	border-bottom-width: 1px;
+	border-bottom: 1px solid var(--color-border-light);
+	padding-top: 0.625rem;
+	padding-bottom: 0.625rem;
+}
+
+#trade-tracker .table-tracker td {
+	vertical-align: middle;
 	border-color: var(--color-border-light);
 }
 
-#trade-tracker .table td {
-	vertical-align: middle;
-	border-color: var(--color-border-light);
+/* Status left border — the candlestick edge */
+#trade-tracker .table-tracker tbody tr td:first-child {
+	border-left: 3px solid transparent;
+}
+
+#trade-tracker .table-tracker tbody tr[data-status="goal"] td:first-child   { border-left-color: #059669; }
+#trade-tracker .table-tracker tbody tr[data-status="green"] td:first-child  { border-left-color: #10b981; }
+#trade-tracker .table-tracker tbody tr[data-status="red"] td:first-child    { border-left-color: #ef4444; }
+#trade-tracker .table-tracker tbody tr[data-status="neutral"] td:first-child { border-left-color: #f59e0b; }
+#trade-tracker .table-tracker tbody tr[data-status="pending"] td:first-child { border-left-color: #cbd5e1; }
+
+/* Row hover */
+#trade-tracker .table-tracker tbody tr:hover > td {
+	background-color: var(--color-bg-section-alt);
 }
 
 #trade-tracker .edit-cell {
@@ -975,6 +996,13 @@ footer {
 	#trade-tracker .table tbody tr:nth-of-type(even) {
 		background: var(--color-bg-card);
 	}
+
+	/* Status left border on mobile cards */
+	#trade-tracker .table-tracker tbody tr[data-status="goal"]    { border-left: 3px solid #059669; }
+	#trade-tracker .table-tracker tbody tr[data-status="green"]   { border-left: 3px solid #10b981; }
+	#trade-tracker .table-tracker tbody tr[data-status="red"]     { border-left: 3px solid #ef4444; }
+	#trade-tracker .table-tracker tbody tr[data-status="neutral"] { border-left: 3px solid #f59e0b; }
+	#trade-tracker .table-tracker tbody tr[data-status="pending"] { border-left: 3px solid #cbd5e1; }
 
 	#trade-tracker .table td {
 		display: flex;

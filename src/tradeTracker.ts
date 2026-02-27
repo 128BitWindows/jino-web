@@ -600,6 +600,7 @@ function renderHistory(metrics: DayMetrics[]): void {
 		})
 		.forEach((metric) => {
 			const row = document.createElement("tr");
+			row.dataset.status = metric.status;
 			const dateCell = document.createElement("td");
 			dateCell.setAttribute("data-label", "Date");
 			const dateInput = document.createElement("input");

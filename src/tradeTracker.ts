@@ -11,6 +11,7 @@ interface DayEntry {
 	actualClose: number | null;
 	noTrade: boolean;
 	dailyTargetPct?: number;
+	notes?: string;
 }
 
 interface Cashflow {
@@ -678,6 +679,21 @@ function renderHistory(metrics: DayMetrics[]): void {
 			statusCell.setAttribute("data-label", "Status");
 			statusCell.innerHTML = `<span class="status-badge ${getStatusClass(metric.status)}">${getStatusLabel(metric.status, metric.entry)}</span>`;
 
+			const notesCell = document.createElement("td");
+			notesCell.setAttribute("data-label", "Notes");
+			const notesTextarea = document.createElement("textarea");
+			notesTextarea.className = "form-control form-control-sm";
+			notesTextarea.rows = 2;
+			notesTextarea.style.minWidth = "160px";
+			notesTextarea.style.resize = "vertical";
+			notesTextarea.placeholder = "What went well or wrong?";
+			notesTextarea.value = metric.entry.notes ?? "";
+			notesTextarea.addEventListener("blur", () => {
+				const trimmed = notesTextarea.value.trim();
+				updateDay(metric.entry.id, { notes: trimmed || undefined });
+			});
+			notesCell.appendChild(notesTextarea);
+
 			const editCell = document.createElement("td");
 			editCell.setAttribute("data-label", "Actions");
 			editCell.className = "edit-cell";
@@ -758,6 +774,7 @@ function renderHistory(metrics: DayMetrics[]): void {
 			row.appendChild(plCell);
 			row.appendChild(pctCell);
 			row.appendChild(statusCell);
+			row.appendChild(notesCell);
 			row.appendChild(editCell);
 			historyBody.appendChild(row);
 		});
